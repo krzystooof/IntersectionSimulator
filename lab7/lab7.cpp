@@ -3,6 +3,8 @@
 #include <random>
 #include <list>
 #include <algorithm>
+#include <memory>
+#include <ctime>
 
 int randomInt(int min,int max){
     static std::default_random_engine e{};
@@ -89,6 +91,32 @@ void task2(){
     }
 }
 
+
+class timeCount
+{
+private:
+    std::clock_t begin;
+    std::clock_t end;
+public:
+    timeCount(){}
+    ~timeCount(){}
+    int start(){
+        begin=clock();
+        return begin;
+    }
+    int stop(){
+        end=clock();
+        return end;
+    }
+    int elapsedClocks(){
+        return double(end - begin);
+    }
+    int elapsedSeconds(){
+        return double(end - begin) / CLOCKS_PER_SEC;        
+    }
+};
+
+
 int main(int argc, char const *argv[])
 {
     int task =1;
@@ -101,8 +129,8 @@ int main(int argc, char const *argv[])
                 task1();
                 break;
             case 2:
-            task2();
-            break;
+                task2();
+                break;
             default:
             std::cout<< "Nie ma takiego zadania!";
                 break;
@@ -111,4 +139,4 @@ int main(int argc, char const *argv[])
     }
     return 0;
 }
-//tezt
+
