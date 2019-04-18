@@ -1,7 +1,11 @@
 #include <iostream>
 #include <string>
 #include <regex>
-#include<fstream>
+#include <fstream>
+#include <sstream>
+#include "../menu.hpp"
+
+#define cannotOpenFile "\n cannot open file\n"
 
 bool check1(std::string line){
     std::regex pattern("Adam( )+Nowak( )+680510.");
@@ -23,29 +27,43 @@ void task1(){
             number++;
         }
     }
-    else std::cout<<"cannot open file\n";
+    else std::cout<<cannotOpenFile;
     i.close();
 }
 
 bool check2(std::string number){
-    std::regex pattern("-.");
+    //if letter or minus on beggining or mark - return false
+    std::regex pattern("[[:alpha:]]|-.|\d*[[:punct:]]\d*");
     std::smatch result;
-    if(std::regex_search(number,result,pattern)) return 0;
-    else {
-        std::cout<<"else\n";
-        std::regex pattern2("\d*");
-        if(std::regex_search(number,result,pattern2)) return 1;
-        else return 0;
-    }
+    if(std::regex_search(number,result,pattern))return false;
+    else return true;
 }
 
 void task2(){
-    if(check2("50,0"))std::cout<<"passed\n";
-    else std::cout<<"failed\n";
+    std::ifstream i;
+    i.open("dane1.txt");
+    std::ofstream o;
+    o.open("dane2.txt");
+    std::string line;
+    if(i.is_open() || o.good()){
+        while (std::getline(i,line)){
+            bool good = true;
+            std::istringstream s(line);
+            std::string a;
+            while (s>>a && good ==true){
+                if (check2(a)!=true)good=false;
+            }
+            if(good==true) o << line <<"\n";
+        }
+    }
+    else std::cout<<cannotOpenFile;
+    i.close();
+    o.close();
 }
 
 int main()
 {
-    task2();
+    menu m {{{1,task1},{2,task2}}};
+    m.run();
     return 0;
 }
