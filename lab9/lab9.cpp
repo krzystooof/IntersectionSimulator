@@ -1,9 +1,11 @@
 #include <iostream>
 #include <string>
 #include <map>
-#include "../common.hpp"
+#include <sstream>
 
 #define overload "przekroczenie ladownosci \n"
+
+int smallShipsMaxPackageWeight=0;
 
 class ship
 {
@@ -22,6 +24,13 @@ public:
     }
     int getCapacity() const{
         return capacity;
+    }
+    std::string getLoad() const{
+        std::string result;
+        for(auto it=cargo.begin();it!=cargo.end();it++){
+                result += it->first + ": " + std::to_string(it->second.first) + " " + std::to_string(it->second.second) +"\n";
+        }
+        return result;
     }
     
 
@@ -42,8 +51,21 @@ public:
        
     }
     void unload(std::string name, int packageAmount){
+        try
+        {
+            auto iterator = cargo.find(name);
+            if(packageAmount>iterator->second.first)throw 0;
+            if(iterator!=cargo.end()) iterator->second.first-=packageAmount;
+        }
+        catch(int number)
+        {
+            std::cout<<name<<": za mało towaru\n";
+        }
+        
+    }
+    void unload(std::string name){
         auto iterator = cargo.find(name);
-        if(iterator!=cargo.end()) iterator->second.first-=packageAmount;
+        if(iterator!=cargo.end()) cargo.erase(iterator);
     }
     void unload(){
         cargo.clear();
@@ -52,15 +74,68 @@ public:
     //ile TODO
 };
 
-void task1(){
-    ship grigory("grigory",10);
-    grigory.load("Banany",10,900);
-    grigory.load("Kiwi",10,20);
+class smallShip:public ship{
+private:
+
+public:
+    smallShip(){}
+    smallShip(std::string name, int capacity):ship(name,capacity){}
+    virtual void load(std::string name,int packageAmount, int packageWeight){
+        if(packageWeight>smallShipsMaxPackageWeight)std::cout<< name <<": za cięzka paczka\n";
+        else ship::load(name,packageAmount,packageWeight);
+    }
+};
+
+void readTask(std::string line,ship &SHIP){
+    std::istringstream input(line);
+    std::string rest;
+    if (line[0]=='Z'){
+        std::string name;
+        int amount,weight;
+        input>>rest>>name>>amount>>weight;
+        SHIP.load(name,amount,weight);
+    }
+    else if(line[0]=='S'){
+            std::cout << SHIP.getLoad();
+    }
+    else if (line[0]=='W'){
+        std::string name;
+        int amount;
+        input>>rest>>name>>amount;
+        SHIP.unload(name,amount);
+    }
+    else if (line[0]=='O')SHIP.unload();
+    else if(line[0]=='-'){
+        std::string name;
+        input>>rest>>name;
+        SHIP.unload(name);
+    }
+
 }
+
 
 int main()
 {
-    menu m{{{1,task1}}};
-    m.run();
+    std::string name;
+    int maxLoad;
+    std::cout<<"Podaj nazwe statku i ladownosc (t): ";
+    std::cin>>name>>maxLoad;
+    ship* SHIP = new smallShip(name,maxLoad);
+    std::cout << "Podaj maksymalna wage paczki dla malych statkow (kg): ";
+    std::cin>>smallShipsMaxPackageWeight;    
+
+    std::string input ="";
+    while(input!="q"){
+        std::cout<<"1. Wczytywanie polecen z klawiatury\t 2. Wczytywanie polecen z pliku\t q - wyjscie\n";
+        std::cin>>input;
+        if(input=="1"){
+            std::cout<<"Podaj polecenie, a nastepnie nacisnij ENTER. Podaj q aby wyjsc\n";
+            while(input!="q"){
+            getline(std::cin,input);
+            readTask(input,*SHIP);
+            }
+        }
+    }
+    
     return 0;
 }
