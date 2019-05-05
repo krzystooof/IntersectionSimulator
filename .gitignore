@@ -1,0 +1,11 @@
+# Build system
+bin
+build
+gmon.out
+*.stats
+Thumbs.db
+ipch/
+.DS_Store
+
+# Project specific
+#
