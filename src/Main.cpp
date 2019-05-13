@@ -1,4 +1,7 @@
 #include <vector>
+#include <string>
+#include <stdlib.h>
+#include <time.h>
 #include "Main.hpp"
 #include "vehicles.hpp"
 
@@ -12,12 +15,15 @@ void WindowResized(const sf::RenderWindow &window, sf::View &view){
 
 int main()
 {
+	srand(time(NULL));
+
 
 	sf::RenderWindow window(sf::VideoMode(WINDOW_SIZE, WINDOW_SIZE), ACTIVITY_TITLE, sf::Style::Close | sf::Style::Resize);
 	sf::View view(sf::Vector2f(0.0f,0.0f), sf::Vector2f(WINDOW_SIZE,WINDOW_SIZE));
 	std::vector<Car> cars;
-	Car car(0,50);
-	Car car1(0,200,0.02f);
+	window.setFramerateLimit(180);
+	Car car(0.0f,50.0f,CarCategory::longCar,1.0f);
+	Car car1(0.0f,200.0f,CarCategory::car,3.0f);
 	// for (int i = 0; i<10;i++){
 	// 	cars.push_back(Car(0,WINDOW_SIZE/2));
 	// }
