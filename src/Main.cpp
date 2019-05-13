@@ -4,6 +4,7 @@
 #include <time.h>
 #include "Main.hpp"
 #include "vehicles.hpp"
+#include "lanes.hpp"
 
 const std::string ACTIVITY_TITLE = "Intersection Simulator";
 const int WINDOW_SIZE = 800;
@@ -22,8 +23,9 @@ int main()
 	sf::View view(sf::Vector2f(0.0f,0.0f), sf::Vector2f(WINDOW_SIZE,WINDOW_SIZE));
 	std::vector<Car> cars;
 	window.setFramerateLimit(180);
-	Car car(0.0f,50.0f,CarCategory::longCar,1.0f);
-	Car car1(0.0f,200.0f,CarCategory::car,3.0f);
+	Lane lane1(0.0f,0.0f,20.0f,LaneType::tram);
+	// Car car(0.0f,50.0f,CarCategory::longCar,1.0f);
+	// Car car1(0.0f,200.0f,CarCategory::car,3.0f);
 	// for (int i = 0; i<10;i++){
 	// 	cars.push_back(Car(0,WINDOW_SIZE/2));
 	// }
@@ -52,10 +54,11 @@ int main()
 		// 	cars[i].draw(window);
 		// 	cars[i].goUp(window,cars[i-1]);
 		// }
-		car.draw(window);
-		car1.draw(window);
-		car.turn(Direction::up,Direction::right,sf::Vector2f(car1.getPosition().x,0));
-		car1.turn(Direction::up,Direction::right,sf::Vector2f(car1.getPosition().x,0),car);
+		// car.draw(window);
+		// car1.draw(window);
+		// car.turn(Direction::up,Direction::right,sf::Vector2f(car1.getPosition().x,0));
+		// car1.turn(Direction::up,Direction::right,sf::Vector2f(car1.getPosition().x,0),car);
+		lane1.draw(window);
 		window.setView(view);
 		window.display();
 		window.clear();
