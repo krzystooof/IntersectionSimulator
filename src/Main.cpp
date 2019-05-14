@@ -13,8 +13,11 @@ const std::string ACTIVITY_TITLE = "Intersection Simulator";
 const int WINDOW_SIZE = 800;
 
 void WindowResized(const sf::RenderWindow &window, sf::View &view){
-	float aspectRatio = float(window.getSize().x)/float(window.getSize().y);
-	view.setSize(WINDOW_SIZE*aspectRatio,WINDOW_SIZE);
+	float x = float(window.getSize().x);
+	float y = float(window.getSize().y);
+	if(x>WINDOW_SIZE)x=WINDOW_SIZE;
+	if(y>WINDOW_SIZE)y=WINDOW_SIZE;
+	view.setSize(x,y);
 }
 
 int main()
@@ -25,9 +28,14 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(WINDOW_SIZE, WINDOW_SIZE), ACTIVITY_TITLE, sf::Style::Close | sf::Style::Resize);
 	sf::View view(sf::Vector2f(0.0f,0.0f), sf::Vector2f(WINDOW_SIZE,WINDOW_SIZE));
 	std::vector<Car> cars;
-	window.setFramerateLimit(180);
-	Lane lane(0.0f,0.0f,30,0,LaneType::asphalt);
-	lane.addVehicle(Direction::up,CarCategory::car,10);
+	window.setFramerateLimit(60);
+	std::vector<Lane> lanes;
+	Lane lane1(-5,0.0f,5,0,LaneType::inAsphalt);
+	Lane lane(0,0.0f,30,0,LaneType::asphalt);
+	lane.addVehicle(Direction::up,CarCategory::car,3);
+	lane.addVehicle(Direction::up,CarCategory::longCar,2);
+	lane.addVehicle(Direction::up,CarCategory::car,5);
+
 
 
 	while (window.isOpen())
@@ -43,11 +51,14 @@ int main()
 				break;
 			case sf::Event::Resized:
 				WindowResized(window,view);
+
 				std::cout << "New window size: " << event.size.height << " x " << event.size.width << std::endl;
 				break;
 			}
 		}
-		lane.go(Direction::up);
+
+		lane.go(Direction::up,Direction::right,sf::Vector2f(0.0,0.0));
+		lane1.draw(window);
 		lane.draw(window);
 		window.setView(view);
 		window.display();

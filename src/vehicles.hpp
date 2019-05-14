@@ -18,8 +18,8 @@ class Car
 private:
     sf::RectangleShape car;
     float height = 40.0f;
-    const float width = 30.0f;
-    float speed = .2f;
+    float width = 30.0f;
+    float speed = .6f;
     float margin = 10;
     sf::Texture carTexture;
 
@@ -27,7 +27,8 @@ public:
     Car()
     {
         //texture
-        this->carTexture.loadFromFile("graphics/car" + std::to_string(rand() % 5) + ".png");
+        this->carTexture.loadFromFile("graphics/car1.png");
+        this->carTexture.setSmooth(true);
 
         //dismensions
         float ratio = float(this->carTexture.getSize().y) / float(this->carTexture.getSize().x);
@@ -38,27 +39,32 @@ public:
         //cout
         std::cout << "Car created at default position\n";
     }
-    Car(float positionX, float positionY, CarCategory type, float speedMulitplier)
+    Car(float width, float positionX, float positionY, CarCategory type, float speedMulitplier)
     {
         std::string out;
+        int textureNumber;
         //texture
         std::string directory = "graphics/";
         if (type == CarCategory::car)
         {
-            this->carTexture.loadFromFile(directory + "car" + std::to_string(rand() % 5) + ".png");
+            textureNumber = rand() % 4;
+            this->carTexture.loadFromFile(directory + "car" + std::to_string(textureNumber) + ".png");
             out = "Car";
         }
         else if (type == CarCategory::longCar)
         {
-            this->carTexture.loadFromFile(directory + "longCar" + std::to_string(rand() % 1) + ".png");
+            textureNumber = rand() % 1;
+            this->carTexture.loadFromFile(directory + "longCar" + std::to_string(textureNumber) + ".png");
             out = "Long car";
         }
         else if (type == CarCategory::tram)
         {
-            this->carTexture.loadFromFile(directory + "tram" + std::to_string(rand() % 1) + ".png");
+            textureNumber = rand() % 1;
+            this->carTexture.loadFromFile(directory + "tram" + std::to_string(textureNumber) + ".png");
             out = "Tram";
         }
         //dismensions
+        this->width = width;
         float ratio = float(this->carTexture.getSize().y) / float(this->carTexture.getSize().x);
         this->height = this->width * ratio;
         car = sf::RectangleShape(sf::Vector2f(width, height));
@@ -71,10 +77,11 @@ public:
         this->speed *= speedMulitplier;
 
         //cout
-        std::cout << " created at: " << positionX << " x " << positionY << " Speed multiplier: " << speedMulitplier << std::endl;
+        std::cout << out << " created at: " << positionX << " x " << positionY << " Speed multiplier: " << speedMulitplier << " Texture number: " << textureNumber << std::endl;
     }
     ~Car()
     {
+        std::cout<<"Car deleted\n";
     }
     void turn(Direction firstDirection, Direction secondDirection, sf::Vector2f turningPosition)
     {
@@ -142,12 +149,12 @@ public:
                 goDown(false);
                 break;
             }
-            float rotateSpeed = this->speed * 6;
+            float rotateSpeed = this->speed * 2;
             switch (secondDirection)
             {
             case Direction::left:
                 goLeft(false);
-                if (this->getRotation() > 270.1 || this->getRotation() < 269.9 || this->getRotation() == 0 || this->getRotation() == 180)
+                if (this->getRotation() > 270.5 || this->getRotation() < 269.5 || this->getRotation() == 0 || this->getRotation() == 180)
                 {
                     if (firstDirection == Direction::down)
                         this->car.rotate(this->speed * rotateSpeed);
@@ -157,7 +164,7 @@ public:
                 break;
             case Direction::right:
                 goRight(false);
-                if (this->getRotation() < 89.9 || this->getRotation() > 90.1 || this->getRotation() == 0 || this->getRotation() == 180)
+                if (this->getRotation() < 89.5 || this->getRotation() > 90.5 || this->getRotation() == 0 || this->getRotation() == 180)
                 {
                     if (firstDirection == Direction::down)
                         this->car.rotate(-this->speed * rotateSpeed);
@@ -167,7 +174,7 @@ public:
                 break;
             case Direction::up:
                 goUp(false);
-                if (this->getRotation() > 0.1 || this->getRotation() < 359.9 || this->getRotation() == 90 || this->getRotation() == 270)
+                if (this->getRotation() > 0.5 || this->getRotation() < 359.5 || this->getRotation() == 90 || this->getRotation() == 270)
                 {
                     if (firstDirection == Direction::left)
                         this->car.rotate(this->speed * rotateSpeed);
@@ -177,7 +184,7 @@ public:
                 break;
             case Direction::down:
                 goDown(false);
-                if (this->getRotation() < 179.9 || this->getRotation() > 180.1 || this->getRotation() == 90 || this->getRotation() == 270)
+                if (this->getRotation() < 179.5 || this->getRotation() > 180.5 || this->getRotation() == 90 || this->getRotation() == 270)
                 {
                     if (firstDirection == Direction::left)
                         this->car.rotate(-this->speed * rotateSpeed);
@@ -258,7 +265,7 @@ public:
         else if (middle)
         {
             bool going = false;
-            float rotateSpeed = this->speed * 6;
+            float rotateSpeed = this->speed * 2;
             switch (secondDirection)
             {
             case Direction::left:

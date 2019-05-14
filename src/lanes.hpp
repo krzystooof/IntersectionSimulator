@@ -15,13 +15,14 @@ private:
     float height = 400.0f;
     float width;
     sf::Texture laneTexture;
-    std::vector<Car> cars;
+    std::vector<Car *> cars;
 
 public:
     Lane()
     {
         //texture
         this->laneTexture.loadFromFile("graphics/laneAsphalt.png");
+        this->laneTexture.setSmooth(true);
 
         //dismensions
         float ratio = float(this->laneTexture.getSize().x) / float(this->laneTexture.getSize().y);
@@ -51,6 +52,7 @@ public:
         this->lane = sf::RectangleShape(sf::Vector2f(width, height));
         this->lane.setRotation(rotation);
         this->lane.setTexture(&this->laneTexture);
+        this->lane.setPosition(sf::Vector2f(positionX, positionY));
 
         //cout
         std::cout << "Lane created at: " << positionX << " x " << positionY << std::endl;
@@ -66,36 +68,37 @@ public:
         if (this->lane.getRotation() == 0)
         {
             x = this->lane.getPosition().x;
-            y = 450;
+            y = 399;
         }
         else if (this->lane.getRotation() == 180)
         {
             x = this->lane.getPosition().x;
-            y = -450;
+            y = -399;
         }
         else if (this->lane.getRotation() == 270)
         {
             y = this->lane.getPosition().y;
-            x = 450;
+            x = 399;
         }
         else if (this->lane.getRotation() == 270)
         {
             y = this->lane.getPosition().y;
-            x = -450;
+            x = -399;
         }
 
         if (category == CarCategory::car)
-            speedMultiplier = ((rand() % 21) + 100) / 100;
+            speedMultiplier = ((rand() % 21) + 100) / 100.0;
         else if (category == CarCategory::longCar)
-            speedMultiplier = ((rand() % 21) + 79) / 100;
+            speedMultiplier = ((rand() % 21) + 79) / 100.0;
         else if (category == CarCategory::car)
-            speedMultiplier = ((rand() % 21) + 40) / 100;
+            speedMultiplier = ((rand() % 21) + 40) / 100.0;
 
-        cars.push_back(Car(x, y, category, speedMultiplier));
+        cars.push_back(new Car(this->width, x, y, category, speedMultiplier));
     }
-    void addVehicle(Direction direction, CarCategory category,int amount)
+    void addVehicle(Direction direction, CarCategory category, int amount)
     {
-        for(int i=0;i<amount;i++)this->addVehicle(direction,category);
+        for (int i = 0; i < amount; i++)
+            this->addVehicle(direction, category);
     }
     void go(Direction direction)
     {
@@ -106,31 +109,31 @@ public:
             switch (direction)
             {
             case Direction::up:
-                cars[0].goUp();
+                cars[0]->goUp();
                 for (int i = 1; i < cars.size(); i++)
                 {
-                    cars[i].goUp(cars[i - 1]);
+                    cars[i]->goUp(*cars[i - 1]);
                 }
                 break;
             case Direction::down:
-                cars[0].goDown();
+                cars[0]->goDown();
                 for (int i = 1; i < cars.size(); i++)
                 {
-                    cars[i].goDown(cars[i - 1]);
+                    cars[i]->goDown(*cars[i - 1]);
                 }
                 break;
             case Direction::left:
-                cars[0].goLeft();
+                cars[0]->goLeft();
                 for (int i = 1; i < cars.size(); i++)
                 {
-                    cars[i].goLeft(cars[i - 1]);
+                    cars[i]->goLeft(*cars[i - 1]);
                 }
                 break;
             case Direction::right:
-                cars[0].goRight();
+                cars[0]->goRight();
                 for (int i = 1; i < cars.size(); i++)
                 {
-                    cars[i].goRight(cars[i - 1]);
+                    cars[i]->goRight(*cars[i - 1]);
                 }
                 break;
             }
@@ -142,17 +145,33 @@ public:
             ;
         else
         {
-            cars[0].turn(firstDirection, secondDirection, turningPosition);
+            cars[0]->turn(firstDirection, secondDirection, turningPosition);
             for (int i = 1; i < cars.size(); i++)
             {
-                cars[i].turn(firstDirection, secondDirection, turningPosition, cars[i - 1]);
+                cars[i]->turn(firstDirection, secondDirection, turningPosition, *cars[i - 1]);
             }
         }
     }
     void draw(sf::RenderWindow &window)
     {
+
         window.draw(this->lane);
-        for(auto car:cars) car.draw(window);
+        if (!cars.empty())
+        {
+            for (auto it = cars.begin(); it != cars.end();)
+            {
+                if (std::abs((*it)->getPosition().x) > 500 || std::abs((*it)->getPosition().y) > 500)
+                {
+                    delete *it;
+                    it = cars.erase(it);
+                    std::cout << cars.size() << "\n";
+                }
+                else {
+                    (*it)->draw(window);
+                    it++;
+                }
+            }
+        }
     }
     float getRotation() const
     {
