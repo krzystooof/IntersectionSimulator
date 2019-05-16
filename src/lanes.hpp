@@ -164,7 +164,6 @@ public:
                 {
                     delete *it;
                     it = cars.erase(it);
-                    std::cout << cars.size() << "\n";
                 }
                 else {
                     (*it)->draw(window);

@@ -29,12 +29,12 @@ int main()
 	sf::View view(sf::Vector2f(0.0f,0.0f), sf::Vector2f(WINDOW_SIZE,WINDOW_SIZE));
 	std::vector<Car> cars;
 	window.setFramerateLimit(60);
-	std::vector<Lane> lanes;
-	Lane lane1(-5,0.0f,5,0,LaneType::inAsphalt);
-	Lane lane(0,0.0f,30,0,LaneType::asphalt);
-	lane.addVehicle(Direction::up,CarCategory::car,3);
-	lane.addVehicle(Direction::up,CarCategory::longCar,2);
-	lane.addVehicle(Direction::up,CarCategory::car,5);
+	// std::vector<Lane> lanes;
+	// Lane lane1(-5,0.0f,5,0,LaneType::inAsphalt);
+	// Lane lane(0,0.0f,30,0,LaneType::asphalt);
+	// lane.addVehicle(Direction::up,CarCategory::car,3);
+	// lane.addVehicle(Direction::up,CarCategory::longCar,2);
+	// lane.addVehicle(Direction::up,CarCategory::car,5);
 
 
 
@@ -57,9 +57,9 @@ int main()
 			}
 		}
 
-		lane.go(Direction::up,Direction::right,sf::Vector2f(0.0,0.0));
-		lane1.draw(window);
-		lane.draw(window);
+		// lane.go(Direction::up,Direction::right,sf::Vector2f(0.0,0.0));
+		// lane1.draw(window);
+		// lane.draw(window);
 		window.setView(view);
 		window.display();
 		window.clear();

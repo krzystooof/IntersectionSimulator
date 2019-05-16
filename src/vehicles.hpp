@@ -12,7 +12,7 @@ enum class CarCategory
     longCar,
     tram
 };
-//TODO delete objects when out of view
+//TODO delete objects when out of view, turning in sine function
 class Car
 {
 private:
@@ -90,25 +90,25 @@ public:
         switch (firstDirection)
         {
         case Direction::left:
-            if (this->car.getPosition().x < turningPosition.x + this->height + margin)
+            if (this->car.getPosition().x < turningPosition.x + (this->height/2))
                 middle = true;
             if (this->car.getPosition().x < turningPosition.x)
                 second = true;
             break;
         case Direction::right:
-            if (this->car.getPosition().x > turningPosition.x - this->height - margin)
+            if (this->car.getPosition().x > turningPosition.x - (this->height/2))
                 middle = true;
             if (this->car.getPosition().x > turningPosition.x)
                 second = true;
             break;
         case Direction::up:
-            if (this->car.getPosition().y < turningPosition.y + this->height + margin)
+            if (this->car.getPosition().y < turningPosition.y + (this->height/2))
                 middle = true;
             if (this->car.getPosition().y < turningPosition.y)
                 second = true;
             break;
         case Direction::down:
-            if (this->car.getPosition().y > turningPosition.y - this->height - margin)
+            if (this->car.getPosition().y > turningPosition.y - (this->height/2))
                 middle = true;
             if (this->car.getPosition().y > turningPosition.y)
                 second = true;
@@ -149,7 +149,7 @@ public:
                 goDown(false);
                 break;
             }
-            float rotateSpeed = this->speed * 2;
+            float rotateSpeed = this->speed * 4;
             switch (secondDirection)
             {
             case Direction::left:
@@ -220,25 +220,25 @@ public:
         switch (firstDirection)
         {
         case Direction::left:
-            if (this->car.getPosition().x < turningPosition.x + this->height + margin)
+            if (this->car.getPosition().x < turningPosition.x + (this->height/2))
                 middle = true;
             if (this->car.getPosition().x < turningPosition.x)
                 second = true;
             break;
         case Direction::right:
-            if (this->car.getPosition().x > turningPosition.x - this->height - margin)
+            if (this->car.getPosition().x > turningPosition.x - (this->height/2))
                 middle = true;
             if (this->car.getPosition().x > turningPosition.x)
                 second = true;
             break;
         case Direction::up:
-            if (this->car.getPosition().y < turningPosition.y + this->height + margin)
+            if (this->car.getPosition().y < turningPosition.y + (this->height/2))
                 middle = true;
             if (this->car.getPosition().y < turningPosition.y)
                 second = true;
             break;
         case Direction::down:
-            if (this->car.getPosition().y > turningPosition.y - this->height - margin)
+            if (this->car.getPosition().y > turningPosition.y - (this->height/2))
                 middle = true;
             if (this->car.getPosition().y > turningPosition.y)
                 second = true;
@@ -265,7 +265,7 @@ public:
         else if (middle)
         {
             bool going = false;
-            float rotateSpeed = this->speed * 2;
+            float rotateSpeed = this->speed * 4;
             switch (secondDirection)
             {
             case Direction::left:
