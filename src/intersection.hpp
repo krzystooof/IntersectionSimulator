@@ -1,16 +1,18 @@
 #pragma once
 #include "lanes.hpp"
 #include "vehicles.hpp"
+#include <algorithm>
+
+//TODO add mirror lanes, vehicle runing
 class Intersection
 {
 private:
     sf::RectangleShape center;
     sf::Texture centerTexture;
-    float centerSize = 100;
-    std::vector<Lane *> left;
-    std::vector<Lane *> right;
-    std::vector<Lane *> up;
-    std::vector<Lane *> down;
+    float centerSize;
+    std::vector<Lane *> lanes;
+    std::vector<Lane *> middle;
+    float laneWidth = 0;
 
 public:
     Intersection()
@@ -27,33 +29,140 @@ public:
         //cout
         std::cout << "Intersection created\n";
     }
-    void addLaneLeft(bool tramLaneExists, int numberOfLanes, bool leftTurnLaneExists, bool rightTurnLaneExists)
+    Intersection(std::vector<std::vector<LaneType>> lanes) //left right up down
     {
-        //TODO add right and left turn lane
-        float laneWidth;
-        float firstAsphaltLanePosition;
-        if (tramLaneExists)
+        //texture
+        this->centerTexture.loadFromFile("graphics/intersectionCenter.png");
+        this->centerTexture.setSmooth(true);
+
+        //dismensions
+        float max = 0;
+        for (auto i : lanes)
+            if (i.size() > max)
+                max = i.size();
+        this->centerSize = 50 * max;
+        if (this->centerSize < 100)
+            this->centerSize = 100;
+        this->center = sf::RectangleShape(sf::Vector2f(centerSize, centerSize));
+        this->center.setPosition(sf::Vector2f(-centerSize / 2, -centerSize / 2));
+        this->center.setTexture(&this->centerTexture);
+        this->laneWidth = this->centerSize / 2 / (max + (max * 0.16f));
+
+        for (int i = 0; i < lanes.size(); i++)
         {
-            laneWidth = this->centerSize / 2 / (numberOfLanes + 1);
-            left.push_back(new Lane(-this->center.getPosition().x / 2, -this->center.getPosition().y / 2, laneWidth * 0.8f, 90, LaneType::tram));
-            right.push_back(new Lane(this->center.getPosition().x / 2, this->center.getPosition().y / 2, laneWidth * 0.8f, -90, LaneType::tram));
-            firstAsphaltLanePosition = (this->center.getPosition().x / 2) + laneWidth * 0.8;
+            float smallLaneWidth = this->laneWidth * 0.16f;
+            float start = 0;
+            float laneY;
+            float laneX;
+            float angle;
+            float firstAsphaltLaneY = .0f;
+            float firstAsphaltLaneX = .0f;
+            if (i == 0)
+            {
+                laneX = -(this->centerSize / 2);
+                laneY = .0f;
+                angle = 90.f;
+                firstAsphaltLaneX = laneX;
+                if (lanes[0][0] == LaneType::tram)
+                {
+                    firstAsphaltLaneY = laneWidth;
+                    this->lanes.push_back(new Lane(laneX, laneY, laneWidth, angle, LaneType::tram));
+                    start = 1;
+                }
+                else
+                    firstAsphaltLaneY = 0;
+            }
+            if (i == 1)
+            {
+                laneX = (this->centerSize / 2);
+                laneY = .0f;
+                angle = -90.f;
+                firstAsphaltLaneX = laneX;
+                if (lanes[0][0] == LaneType::tram)
+                {
+                    firstAsphaltLaneY = -laneWidth;
+                    this->lanes.push_back(new Lane(laneX, laneY, laneWidth, angle, LaneType::tram));
+                    start = 1;
+                }
+                else
+                    firstAsphaltLaneY = 0;
+            }
+            if (i == 2)
+            {
+                laneY = -(this->centerSize / 2);
+                laneX = .0f;
+                angle = 180.f;
+                firstAsphaltLaneY = laneY;
+                if (lanes[0][0] == LaneType::tram)
+                {
+                    firstAsphaltLaneX = -laneWidth;
+                    this->lanes.push_back(new Lane(laneX, laneY, laneWidth, angle, LaneType::tram));
+                    start = 1;
+                }
+                else
+                    firstAsphaltLaneX = 0;
+            }
+            if (i == 3)
+            {
+                laneY = (this->centerSize / 2);
+                laneX = .0f;
+                angle = 0.f;
+                firstAsphaltLaneY = laneY;
+                if (lanes[0][0] == LaneType::tram)
+                {
+                    firstAsphaltLaneX = laneWidth;
+                    this->lanes.push_back(new Lane(laneX, laneY, laneWidth, angle, LaneType::tram));
+                    start = 1;
+                }
+                else
+                    firstAsphaltLaneX = 0;
+            }
+            this->lanes.push_back(new Lane(firstAsphaltLaneX, firstAsphaltLaneY, this->laneWidth * .16f, angle, LaneType::outAsphalt));
+            for (int j = start; j < lanes[i].size(); j++)
+            {
+                float smallLaneMarginX = .0f, smallLaneMarginY = .0f;
+                if (i == 3)
+                {
+                    laneX += laneWidth + smallLaneWidth;
+                    smallLaneMarginX = this->laneWidth;
+                }
+                else if (i == 2)
+                {
+                    laneX -= laneWidth + smallLaneWidth;
+                    smallLaneMarginX = -this->laneWidth;
+                }
+                else if (i == 0)
+                {
+                    laneY += laneWidth + smallLaneWidth;
+                    smallLaneMarginY = this->laneWidth;
+                }
+                else if (i == 1)
+                {
+                    laneY -= laneWidth + smallLaneWidth;
+                    smallLaneMarginY = -this->laneWidth;
+                }
+                this->lanes.push_back(new Lane(laneX, laneY, this->laneWidth, angle, lanes[i][j]));
+                if (j < lanes[i].size() - 1)
+                    this->lanes.push_back(new Lane(laneX + smallLaneMarginX, laneY + smallLaneMarginY, smallLaneWidth, angle, LaneType::inAsphalt));
+                else
+                    this->lanes.push_back(new Lane(laneX + smallLaneMarginX, laneY + smallLaneMarginY, smallLaneWidth, angle, LaneType::outAsphalt));
+
+
+            }
         }
-        else
-        {
-            firstAsphaltLanePosition = this->center.getPosition().x / 2;
-            laneWidth = this->centerSize / 2 / numberOfLanes;
-        }
-        left.push_back(new Lane(-firstAsphaltLanePosition, -firstAsphaltLanePosition, laneWidth * 0.16f, 90, LaneType::outAsphalt));
-        left.push_back(new Lane(firstAsphaltLanePosition, firstAsphaltLanePosition, laneWidth * 0.16f, -90, LaneType::outAsphalt));
-        for (int i = 0; i < numberOfLanes; i++)
-        {
-            left.push_back(new Lane(-(firstAsphaltLanePosition + (laneWidth * 0.16f * (i + 1) + (laneWidth * i))), -(firstAsphaltLanePosition + (laneWidth * 0.16f * (i + 1) + (laneWidth * i))), laneWidth, 90, LaneType::asphalt));
-            right.push_back(new Lane(firstAsphaltLanePosition + (laneWidth * 0.16f * (i + 1) + (laneWidth * i)), firstAsphaltLanePosition + (laneWidth * 0.16f * (i + 1) + (laneWidth * i)), laneWidth, -90, LaneType::asphalt));
-            left.push_back(new Lane(-(firstAsphaltLanePosition + (laneWidth * 0.16f * (i + 1) + (laneWidth * i))), -(firstAsphaltLanePosition + (laneWidth * 0.16f * (i + 1) + (laneWidth * i))), laneWidth*.16f, 90, LaneType::inAsphalt));
-            right.push_back(new Lane(firstAsphaltLanePosition + (laneWidth * 0.16f * (i + 1) + (laneWidth * i)), firstAsphaltLanePosition + (laneWidth * 0.16f * (i + 1) + (laneWidth * i)), laneWidth*.16f, -90, LaneType::inAsphalt));
-        }
-        left.push_back(new Lane(-(firstAsphaltLanePosition + (laneWidth * 0.16f * (numberOfLanes + 1) + (laneWidth * numberOfLanes))), -(firstAsphaltLanePosition + (laneWidth * 0.16f * (numberOfLanes + 1) + (laneWidth * numberOfLanes))), laneWidth, 90, LaneType::asphalt));
-        right.push_back(new Lane(firstAsphaltLanePosition + (laneWidth * 0.16f * (numberOfLanes + 1) + (laneWidth * numberOfLanes)), firstAsphaltLanePosition + (laneWidth * 0.16f * (numberOfLanes + 1) + (laneWidth * numberOfLanes)), laneWidth, -90, LaneType::asphalt));
+
+        //cout
+        std::cout << "Intersection created. Center size: " << this->centerSize << " Max Lanes: " << max << "\n";
+    }
+
+    void draw(sf::RenderWindow &window)
+    {
+        window.draw(this->center);
+        if (!middle.empty())
+            for (auto it : middle)
+                it->draw(window);
+        if (!lanes.empty())
+            for (auto it : lanes)
+                it->draw(window);
     }
 };

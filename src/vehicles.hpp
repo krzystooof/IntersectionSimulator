@@ -63,6 +63,7 @@ public:
             this->carTexture.loadFromFile(directory + "tram" + std::to_string(textureNumber) + ".png");
             out = "Tram";
         }
+        this->carTexture.setSmooth(true);
         //dismensions
         this->width = width;
         float ratio = float(this->carTexture.getSize().y) / float(this->carTexture.getSize().x);

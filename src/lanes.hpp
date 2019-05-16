@@ -5,7 +5,10 @@ enum class LaneType
     inAsphalt,
     outAsphalt,
     asphalt,
-    tram
+    asphaltLeft,
+    asphaltRight,
+    tram,
+    tramNoBackground
 };
 
 class Lane
@@ -42,8 +45,15 @@ public:
             this->laneTexture.loadFromFile("graphics/laneOut.png");
         else if (type == LaneType::asphalt)
             this->laneTexture.loadFromFile("graphics/laneAsphalt.png");
+        else if (type == LaneType::asphaltLeft)
+            this->laneTexture.loadFromFile("graphics/laneAsphalt.png");//left lane
+        else if (type == LaneType::asphaltRight)
+            this->laneTexture.loadFromFile("graphics/laneAsphalt.png");//right lane
         else if (type == LaneType::tram)
             this->laneTexture.loadFromFile("graphics/laneTram.png");
+        else if (type == LaneType::tramNoBackground)
+            this->laneTexture.loadFromFile("graphics/laneTramNobackground.png");
+        this->laneTexture.setSmooth(true);
 
         //dismensions
         this->width = width;
