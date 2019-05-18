@@ -31,7 +31,8 @@ int main()
 	std::vector<Car> cars;
 	window.setFramerateLimit(60);
 	std::vector<LaneType> right {LaneType::tram,LaneType::asphalt,LaneType::asphalt};
-	Intersection intersection(std::vector<std::vector<LaneType>> {right,right,right,right});
+	std::vector<LaneType> left {LaneType::asphalt,LaneType::asphalt};
+	Intersection intersection(std::vector<std::vector<LaneType>> {left,left,right,right});
 
 	// std::vector<Lane> lanes;
 	// Lane lane1(-5,0.0f,5,0,LaneType::inAsphalt);
