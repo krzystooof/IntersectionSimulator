@@ -226,39 +226,43 @@ public:
                 {
                     if (i->getType() == LaneType::asphaltRight)
                     {
-                        i->go(Direction::up, Direction::right, sf::Vector2f(i->getPosition().x, i->getPosition().y - (laneWidth * 1.16f)));
+                        i->go(Direction::up, Direction::right, sf::Vector2f(i->getPosition().x, i->getPosition().y - (laneWidth * 1.16f)),*i);
                     }
                     else
-                        i->go(Direction::up);
+                        i->go(Direction::up,*i);
                 }
                 if (i->getRotation() == 180)
                 {
                     if (i->getType() == LaneType::asphaltRight)
                     {
-                        i->go(Direction::down, Direction::left, sf::Vector2f(i->getPosition().x, i->getPosition().y + (laneWidth * 1.16f)));
+                        i->go(Direction::down, Direction::left, sf::Vector2f(i->getPosition().x, i->getPosition().y + (laneWidth * 1.16f)),*i);
                     }
                     else
-                        i->go(Direction::down);
+                        i->go(Direction::down,*i);
                 }
                 if (i->getRotation() == 90)
                 {
                     if (i->getType() == LaneType::asphaltRight)
                     {
-                        i->go(Direction::right, Direction::down, sf::Vector2f(i->getPosition().x + (laneWidth * 1.16f), i->getPosition().y));
+                        i->go(Direction::right, Direction::down, sf::Vector2f(i->getPosition().x + (laneWidth * 1.16f), i->getPosition().y),*i);
                     }
                     else
-                        i->go(Direction::right);
+                        i->go(Direction::right,*i);
                 }
                 if (i->getRotation() == 270)
                 {
                     if (i->getType() == LaneType::asphaltRight)
                     {
-                        i->go(Direction::left, Direction::up, sf::Vector2f(i->getPosition().x - (laneWidth * 1.16f), i->getPosition().y + (laneWidth * 1.16f)));
+                        i->go(Direction::left, Direction::up, sf::Vector2f(i->getPosition().x - (laneWidth * 1.16f), i->getPosition().y + (laneWidth * 1.16f)),*i);
                     }
                     else
-                        i->go(Direction::left);
+                        i->go(Direction::left,*i);
                 }
             }
         }
+    }
+    void changeLight(){
+        for (auto i:lanes)
+            i->changeLight();
     }
 };

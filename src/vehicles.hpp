@@ -1,4 +1,5 @@
 #pragma once
+
 enum class Direction
 {
     left,
@@ -82,7 +83,7 @@ public:
     }
     ~Car()
     {
-        std::cout<<"Car deleted\n";
+        std::cout << "Car deleted\n";
     }
     void turn(Direction firstDirection, Direction secondDirection, sf::Vector2f turningPosition)
     {
@@ -91,25 +92,25 @@ public:
         switch (firstDirection)
         {
         case Direction::left:
-            if (this->car.getPosition().x < turningPosition.x + (this->height/2))
+            if (this->car.getPosition().x < turningPosition.x + (this->height / 2))
                 middle = true;
             if (this->car.getPosition().x < turningPosition.x)
                 second = true;
             break;
         case Direction::right:
-            if (this->car.getPosition().x > turningPosition.x - (this->height/2))
+            if (this->car.getPosition().x > turningPosition.x - (this->height / 2))
                 middle = true;
             if (this->car.getPosition().x > turningPosition.x)
                 second = true;
             break;
         case Direction::up:
-            if (this->car.getPosition().y < turningPosition.y + (this->height/2))
+            if (this->car.getPosition().y < turningPosition.y + (this->height / 2))
                 middle = true;
             if (this->car.getPosition().y < turningPosition.y)
                 second = true;
             break;
         case Direction::down:
-            if (this->car.getPosition().y > turningPosition.y - (this->height/2))
+            if (this->car.getPosition().y > turningPosition.y - (this->height / 2))
                 middle = true;
             if (this->car.getPosition().y > turningPosition.y)
                 second = true;
@@ -214,32 +215,32 @@ public:
             }
         }
     }
-    void turn(Direction firstDirection, Direction secondDirection, sf::Vector2f turningPosition, Car &previousCar)
+    void turn(Direction firstDirection, Direction secondDirection, sf::Vector2f turningPosition, Car &previousCar, Lane &lane)
     {
         bool second = false;
         bool middle = false;
         switch (firstDirection)
         {
         case Direction::left:
-            if (this->car.getPosition().x < turningPosition.x + (this->height/2))
+            if (this->car.getPosition().x < turningPosition.x + (this->height / 2))
                 middle = true;
             if (this->car.getPosition().x < turningPosition.x)
                 second = true;
             break;
         case Direction::right:
-            if (this->car.getPosition().x > turningPosition.x - (this->height/2))
+            if (this->car.getPosition().x > turningPosition.x - (this->height / 2))
                 middle = true;
             if (this->car.getPosition().x > turningPosition.x)
                 second = true;
             break;
         case Direction::up:
-            if (this->car.getPosition().y < turningPosition.y + (this->height/2))
+            if (this->car.getPosition().y < turningPosition.y + (this->height / 2))
                 middle = true;
             if (this->car.getPosition().y < turningPosition.y)
                 second = true;
             break;
         case Direction::down:
-            if (this->car.getPosition().y > turningPosition.y - (this->height/2))
+            if (this->car.getPosition().y > turningPosition.y - (this->height / 2))
                 middle = true;
             if (this->car.getPosition().y > turningPosition.y)
                 second = true;
@@ -270,7 +271,7 @@ public:
             switch (secondDirection)
             {
             case Direction::left:
-                if (goLeft(previousCar, false))
+                if (goLeft(previousCar, false, lane))
                 {
                     going = true;
                     if (this->getRotation() > 270.5 || this->getRotation() < 269.5 || this->getRotation() == 0 || this->getRotation() == 180)
@@ -283,7 +284,7 @@ public:
                 }
                 break;
             case Direction::right:
-                if (goRight(previousCar, false))
+                if (goRight(previousCar, false, lane))
                 {
                     going = true;
                     if (this->getRotation() < 89.5 || this->getRotation() > 90.5 || this->getRotation() == 0 || this->getRotation() == 180)
@@ -296,7 +297,7 @@ public:
                 }
                 break;
             case Direction::up:
-                if (goUp(previousCar, false))
+                if (goUp(previousCar, false,lane))
                 {
                     going = true;
                     if (this->getRotation() > 0.5 || this->getRotation() < 359.5 || this->getRotation() == 90 || this->getRotation() == 270)
@@ -309,7 +310,7 @@ public:
                 }
                 break;
             case Direction::down:
-                if (goDown(previousCar, false))
+                if (goDown(previousCar, false, lane))
                 {
                     going = true;
                     if (this->getRotation() < 179.5 || this->getRotation() > 180.5 || this->getRotation() == 90 || this->getRotation() == 270)
@@ -347,27 +348,173 @@ public:
             {
             case Direction::left:
                 if (previousCar.getRotation() == 270.0f)
-                    goLeft(previousCar);
+                    goLeft(previousCar, lane);
                 else
                     goLeft();
                 break;
             case Direction::right:
                 if (previousCar.getRotation() == 90.0f)
-                    goRight(previousCar);
+                    goRight(previousCar, lane);
                 else
                     goRight();
                 break;
             case Direction::up:
                 if (previousCar.getRotation() == 0.0f)
-                    goUp(previousCar);
+                    goUp(previousCar, lane);
                 else
                     goUp();
                 break;
             case Direction::down:
                 if (previousCar.getRotation() == 180.0f)
-                    goDown(previousCar);
+                    goDown(previousCar, lane);
                 else
                     goDown();
+                break;
+            }
+        }
+    }
+    void turn(Direction firstDirection, Direction secondDirection, sf::Vector2f turningPosition, Lane &lane)
+    {
+        bool second = false;
+        bool middle = false;
+        switch (firstDirection)
+        {
+        case Direction::left:
+            if (this->car.getPosition().x < turningPosition.x + (this->height / 2))
+                middle = true;
+            if (this->car.getPosition().x < turningPosition.x)
+                second = true;
+            break;
+        case Direction::right:
+            if (this->car.getPosition().x > turningPosition.x - (this->height / 2))
+                middle = true;
+            if (this->car.getPosition().x > turningPosition.x)
+                second = true;
+            break;
+        case Direction::up:
+            if (this->car.getPosition().y < turningPosition.y + (this->height / 2))
+                middle = true;
+            if (this->car.getPosition().y < turningPosition.y)
+                second = true;
+            break;
+        case Direction::down:
+            if (this->car.getPosition().y > turningPosition.y - (this->height / 2))
+                middle = true;
+            if (this->car.getPosition().y > turningPosition.y)
+                second = true;
+            break;
+        }
+        if (second)
+        {
+            switch (secondDirection)
+            {
+            case Direction::left:
+                goLeft();
+                break;
+            case Direction::right:
+                goRight();
+                break;
+            case Direction::up:
+                goUp();
+                break;
+            case Direction::down:
+                goDown();
+                break;
+            }
+        }
+        else if (middle)
+        {
+            bool going = false;
+            float rotateSpeed = this->speed * 4;
+            switch (secondDirection)
+            {
+            case Direction::left:
+                if (goLeft(false, lane))
+                {
+                    going = true;
+                    if (this->getRotation() > 270.5 || this->getRotation() < 269.5 || this->getRotation() == 0 || this->getRotation() == 180)
+                    {
+                        if (firstDirection == Direction::down)
+                            this->car.rotate(this->speed * rotateSpeed);
+                        else
+                            this->car.rotate(-this->speed * rotateSpeed);
+                    }
+                }
+                break;
+            case Direction::right:
+                if (goRight(false, lane))
+                {
+                    going = true;
+                    if (this->getRotation() < 89.5 || this->getRotation() > 90.5 || this->getRotation() == 0 || this->getRotation() == 180)
+                    {
+                        if (firstDirection == Direction::down)
+                            this->car.rotate(-this->speed * rotateSpeed);
+                        else
+                            this->car.rotate(this->speed * rotateSpeed);
+                    }
+                }
+                break;
+            case Direction::up:
+                if (goUp(false,lane))
+                {
+                    going = true;
+                    if (this->getRotation() > 0.5 || this->getRotation() < 359.5 || this->getRotation() == 90 || this->getRotation() == 270)
+                    {
+                        if (firstDirection == Direction::left)
+                            this->car.rotate(this->speed * rotateSpeed);
+                        else
+                            this->car.rotate(-this->speed * rotateSpeed);
+                    }
+                }
+                break;
+            case Direction::down:
+                if (goDown(false, lane))
+                {
+                    going = true;
+                    if (this->getRotation() < 179.5 || this->getRotation() > 180.5 || this->getRotation() == 90 || this->getRotation() == 270)
+                    {
+                        if (firstDirection == Direction::left)
+                            this->car.rotate(-this->speed * rotateSpeed);
+                        else
+                            this->car.rotate(this->speed * rotateSpeed);
+                    }
+                }
+                break;
+            }
+            if (going)
+            {
+                switch (firstDirection)
+                {
+                case Direction::left:
+                    goLeft(false);
+                    break;
+                case Direction::right:
+                    goRight(false);
+                    break;
+                case Direction::up:
+                    goUp(false);
+                    break;
+                case Direction::down:
+                    goDown(false);
+                    break;
+                }
+            }
+        }
+        else
+        {
+            switch (firstDirection)
+            {
+            case Direction::left:
+                    goLeft(lane);
+                break;
+            case Direction::right:
+                    goRight(lane);
+                break;
+            case Direction::up:
+                    goUp(lane);
+                break;
+            case Direction::down:
+                    goDown(lane);
                 break;
             }
         }
@@ -380,11 +527,43 @@ public:
         else
             this->car.move(0.0f, -speed);
     }
-    bool goUp(Car &previousCar, bool changeRotation)
+    void goUp(Lane &lane)
+    {
+        this->car.setRotation(0.0f);
+        if (lane.getPosition().y + margin >= this->car.getPosition().x && lane.getLight())
+            ;
+        else
+            this->car.move(0.0f, -speed);
+    }
+    void goUp(Car &previousCar, Lane &lane)
+    {
+        this->car.setRotation(0.0f);
+        if (lane.getPosition().y + margin >= this->car.getPosition().x && lane.getLight())
+            ;
+        else if (previousCar.getPosition().y + previousCar.height + margin >= this->car.getPosition().y)
+            ;
+        else
+            this->car.move(0.0f, -speed);
+    }
+    bool goUp(bool changeRotation, Lane &lane)
     {
         if (changeRotation)
             this->car.setRotation(0.0f);
-        if (previousCar.getPosition().y + previousCar.height + margin >= this->car.getPosition().y)
+        if (lane.getPosition().y + margin >= this->car.getPosition().x && lane.getLight())
+            return false;
+        else
+        {
+            this->car.move(0.0f, -speed);
+            return true;
+        }
+    }
+    bool goUp(Car &previousCar, bool changeRotation, Lane &lane)
+    {
+        if (changeRotation)
+            this->car.setRotation(0.0f);
+        if (lane.getPosition().y + margin >= this->car.getPosition().x && lane.getLight())
+            ;
+        else if (previousCar.getPosition().y + previousCar.height + margin >= this->car.getPosition().y)
             return false;
         else
         {
@@ -411,11 +590,43 @@ public:
         else
             this->car.move(0.0f, speed);
     }
-    bool goDown(Car &previousCar, bool changeRotation)
+    void goDown(Lane &lane)
+    {
+        this->car.setRotation(180.0f);
+        if (lane.getPosition().y - margin <= this->car.getPosition().y && lane.getLight())
+            ;
+        else
+            this->car.move(0.0f, speed);
+    }
+    void goDown(Car &previousCar, Lane &lane)
+    {
+        this->car.setRotation(180.0f);
+        if (lane.getPosition().y - margin <= this->car.getPosition().y && lane.getLight())
+            ;
+        else if (previousCar.getPosition().y - previousCar.height - margin <= this->car.getPosition().y)
+            ;
+        else
+            this->car.move(0.0f, speed);
+    }
+    bool goDown(Car &previousCar, bool changeRotation, Lane &lane)
     {
         if (changeRotation)
             this->car.setRotation(180.0f);
-        if (previousCar.getPosition().y - previousCar.height - margin <= this->car.getPosition().y)
+        if (lane.getPosition().y - margin <= this->car.getPosition().y && lane.getLight())
+            ;
+        else if (previousCar.getPosition().y - previousCar.height - margin <= this->car.getPosition().y)
+            return false;
+        else
+        {
+            this->car.move(0.0f, speed);
+            return true;
+        }
+    }
+    bool goDown(bool changeRotation, Lane &lane)
+    {
+        if (changeRotation)
+            this->car.setRotation(180.0f);
+        if (lane.getPosition().y - margin <= this->car.getPosition().y && lane.getLight())
             return false;
         else
         {
@@ -442,11 +653,43 @@ public:
         else
             this->car.move(-speed, 0.0f);
     }
-    bool goLeft(Car &previousCar, bool changeRotation)
+    void goLeft(Lane &lane)
+    {
+        this->car.setRotation(-90.0f);
+         if (lane.getPosition().x + margin >= this->car.getPosition().x && lane.getLight())
+            ;
+        else
+            this->car.move(-speed, 0.0f);
+    }
+    void goLeft(Car &previousCar, Lane &lane)
+    {
+        this->car.setRotation(-90.0f);
+        if (lane.getPosition().x + margin >= this->car.getPosition().x && lane.getLight())
+            ;
+        else if (previousCar.getPosition().x + previousCar.height + margin >= this->car.getPosition().x)
+            ;
+        else
+            this->car.move(-speed, 0.0f);
+    }
+    bool goLeft(Car &previousCar, bool changeRotation, Lane &lane)
     {
         if (changeRotation)
             this->car.setRotation(-90.0f);
-        if (previousCar.getPosition().x + previousCar.height + margin >= this->car.getPosition().x)
+        if (lane.getPosition().x + margin >= this->car.getPosition().x && lane.getLight())
+            ;
+        else if (previousCar.getPosition().x + previousCar.height + margin >= this->car.getPosition().x)
+            return false;
+        else
+        {
+            this->car.move(-speed, 0.0f);
+            return true;
+        }
+    }
+    bool goLeft(bool changeRotation, Lane &lane)
+    {
+        if (changeRotation)
+            this->car.setRotation(-90.0f);
+        if (lane.getPosition().x + margin >= this->car.getPosition().x && lane.getLight())
             return false;
         else
         {
@@ -473,11 +716,43 @@ public:
         else
             this->car.move(speed, 0.0f);
     }
-    bool goRight(Car &previousCar, bool changeRotation)
+    void goRight(Lane &lane)
+    {
+        this->car.setRotation(90.0f);
+        if (lane.getPosition().x - margin <= this->car.getPosition().x && lane.getLight())
+            ;
+        else
+            this->car.move(speed, 0.0f);
+    }
+    void goRight(Car &previousCar, Lane &lane)
+    {
+        this->car.setRotation(90.0f);
+        if (lane.getPosition().x - margin <= this->car.getPosition().x && lane.getLight())
+            ;
+        else if (previousCar.getPosition().x - previousCar.height - margin <= this->car.getPosition().x)
+            ;
+        else
+            this->car.move(speed, 0.0f);
+    }
+    bool goRight(Car &previousCar, bool changeRotation, Lane &lane)
     {
         if (changeRotation)
             this->car.setRotation(90.0f);
-        if (previousCar.getPosition().x - previousCar.height - margin <= this->car.getPosition().x)
+        if (lane.getPosition().x - margin <= this->car.getPosition().x && lane.getLight())
+            ;
+        else if (previousCar.getPosition().x - previousCar.height - margin <= this->car.getPosition().x)
+            return false;
+        else
+        {
+            this->car.move(speed, 0.0f);
+            return true;
+        }
+    }
+    bool goRight(bool changeRotation, Lane &lane)
+    {
+        if (changeRotation)
+            this->car.setRotation(90.0f);
+        if (lane.getPosition().x - margin <= this->car.getPosition().x && lane.getLight())
             return false;
         else
         {

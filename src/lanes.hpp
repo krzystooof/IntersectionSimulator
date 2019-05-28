@@ -1,5 +1,4 @@
 #pragma once
-
 enum class LaneType
 {
     inAsphalt,
@@ -17,6 +16,7 @@ private:
     sf::RectangleShape lane;
     float height = 400.0f;
     float width;
+    bool light;
     sf::Texture laneTexture;
     std::vector<Car *> cars;
     LaneType type;
@@ -65,6 +65,7 @@ public:
         this->lane.setRotation(rotation);
         this->lane.setTexture(&this->laneTexture);
         this->lane.setPosition(sf::Vector2f(positionX, positionY));
+        light = false;
 
         //cout
         std::cout << "Lane created at: " << positionX << " x " << positionY << std::endl;
@@ -112,7 +113,7 @@ public:
         for (int i = 0; i < amount; i++)
             this->addVehicle(category);
     }
-    void go(Direction direction)
+    void go(Direction direction, Lane &lane)
     {
         if (cars.empty())
             ;
@@ -121,46 +122,46 @@ public:
             switch (direction)
             {
             case Direction::up:
-                cars[0]->goUp();
+                cars[0]->goUp(lane);
                 for (int i = 1; i < cars.size(); i++)
                 {
-                    cars[i]->goUp(*cars[i - 1]);
+                    cars[i]->goUp(*cars[i - 1],lane);
                 }
                 break;
             case Direction::down:
-                cars[0]->goDown();
+                cars[0]->goDown(lane);
                 for (int i = 1; i < cars.size(); i++)
                 {
-                    cars[i]->goDown(*cars[i - 1]);
+                    cars[i]->goDown(*cars[i - 1],lane);
                 }
                 break;
             case Direction::left:
-                cars[0]->goLeft();
+                cars[0]->goLeft(lane);
                 for (int i = 1; i < cars.size(); i++)
                 {
-                    cars[i]->goLeft(*cars[i - 1]);
+                    cars[i]->goLeft(*cars[i - 1],lane);
                 }
                 break;
             case Direction::right:
-                cars[0]->goRight();
+                cars[0]->goRight(lane);
                 for (int i = 1; i < cars.size(); i++)
                 {
-                    cars[i]->goRight(*cars[i - 1]);
+                    cars[i]->goRight(*cars[i - 1],lane);
                 }
                 break;
             }
         }
     }
-    void go(Direction firstDirection, Direction secondDirection, sf::Vector2f turningPosition)
+    void go(Direction firstDirection, Direction secondDirection, sf::Vector2f turningPosition, Lane &lane)
     {
         if (cars.empty())
             ;
         else
         {
-            cars[0]->turn(firstDirection, secondDirection, turningPosition);
+            cars[0]->turn(firstDirection, secondDirection, turningPosition,lane);
             for (int i = 1; i < cars.size(); i++)
             {
-                cars[i]->turn(firstDirection, secondDirection, turningPosition, *cars[i - 1]);
+                cars[i]->turn(firstDirection, secondDirection, turningPosition, *cars[i - 1],lane);
             }
         }
     }
@@ -194,5 +195,14 @@ public:
     }
     LaneType getType() const{
         return this->type;
+    }
+    void changeLight(){
+        light=!light;
+    }
+    bool getLight() const{
+        return light;
+    }
+    sf::Vector2f getPosition() const{
+        return this->lane.getPosition();
     }
 };
