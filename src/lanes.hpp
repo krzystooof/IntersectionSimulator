@@ -19,6 +19,7 @@ private:
     float width;
     sf::Texture laneTexture;
     std::vector<Car *> cars;
+    LaneType type;
 
 public:
     Lane()
@@ -39,6 +40,7 @@ public:
     Lane(float positionX, float positionY, float width, float rotation, LaneType type)
     {
         //texture
+        this->type=type;
         if (type == LaneType::inAsphalt)
             this->laneTexture.loadFromFile("graphics/laneIn.png");
         else if (type == LaneType::outAsphalt)
@@ -189,5 +191,8 @@ public:
     sf::Vector2f getPosition() const
     {
         return this->lane.getPosition();
+    }
+    LaneType getType() const{
+        return this->type;
     }
 };

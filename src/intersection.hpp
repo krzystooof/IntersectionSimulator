@@ -9,7 +9,7 @@ class Intersection
 private:
     sf::RectangleShape center;
     sf::Texture centerTexture;
-    float centerSize;
+    float centerWidth, centerHeight;
     std::vector<Lane *> lanes;
     std::vector<Lane *> lanes2;
     float laneWidth = 0;
@@ -22,8 +22,8 @@ public:
         this->centerTexture.setSmooth(true);
 
         //dismensions
-        this->center = sf::RectangleShape(sf::Vector2f(centerSize, centerSize));
-        this->center.setPosition(sf::Vector2f(-centerSize / 2, -centerSize / 2));
+        this->center = sf::RectangleShape(sf::Vector2f(centerWidth, centerHeight));
+        this->center.setPosition(sf::Vector2f(-centerWidth / 2, -centerHeight / 2));
         this->center.setTexture(&this->centerTexture);
 
         //cout
@@ -36,17 +36,12 @@ public:
         this->centerTexture.setSmooth(true);
 
         //dismensions
-        float max = 0;
-        for (auto i : lanes)
-            if (i.size() > max)
-                max = i.size();
-        this->centerSize = 50 * max;
-        if (this->centerSize < 100)
-            this->centerSize = 100;
-        this->center = sf::RectangleShape(sf::Vector2f(centerSize, centerSize));
-        this->center.setPosition(sf::Vector2f(-centerSize / 2, -centerSize / 2));
+        this->centerWidth = 50 * (lanes[2].size() + lanes[3].size());
+        this->centerHeight = 50 * (lanes[0].size() + lanes[1].size());
+        this->center = sf::RectangleShape(sf::Vector2f(centerWidth, centerHeight));
+        this->center.setPosition(sf::Vector2f(-centerWidth / 2, -centerHeight / 2));
         this->center.setTexture(&this->centerTexture);
-        this->laneWidth = this->centerSize / 2 / (max + (max * 0.16f));
+        this->laneWidth = this->centerWidth / (lanes[2].size() + lanes[3].size()) * .863f;
 
         for (int i = 0; i < lanes.size(); i++)
         {
@@ -59,7 +54,7 @@ public:
             float firstAsphaltLaneX = .0f;
             if (i == 0)
             {
-                laneX = -(this->centerSize / 2);
+                laneX = -(this->centerWidth / 2);
                 laneY = .0f;
                 angle = 90.f;
                 firstAsphaltLaneX = laneX;
@@ -73,7 +68,7 @@ public:
             }
             if (i == 1)
             {
-                laneX = (this->centerSize / 2);
+                laneX = (this->centerWidth / 2);
                 laneY = .0f;
                 angle = -90.f;
                 firstAsphaltLaneX = laneX;
@@ -87,7 +82,7 @@ public:
             }
             if (i == 2)
             {
-                laneY = -(this->centerSize / 2);
+                laneY = -(this->centerHeight / 2);
                 laneX = .0f;
                 angle = 180.f;
                 firstAsphaltLaneY = laneY;
@@ -101,7 +96,7 @@ public:
             }
             if (i == 3)
             {
-                laneY = (this->centerSize / 2);
+                laneY = (this->centerHeight / 2);
                 laneX = .0f;
                 angle = 0.f;
                 firstAsphaltLaneY = laneY;
@@ -114,31 +109,41 @@ public:
                     firstAsphaltLaneX = 0;
             }
             if (lanes[i][0] == LaneType::tram)
+            {
                 this->lanes.push_back(new Lane(laneX, laneY, laneWidth, angle, LaneType::tram));
-            laneX=firstAsphaltLaneX;
-            laneY=firstAsphaltLaneY;
+                if (i == 0)
+                    this->lanes2.push_back(new Lane(-laneX, laneY + laneWidth, laneWidth, -angle, LaneType::tram));
+                else if (i == 1)
+                    this->lanes2.push_back(new Lane(-laneX, laneY - laneWidth, laneWidth, -angle, LaneType::tram));
+                else if (i == 2)
+                    this->lanes2.push_back(new Lane(laneX - laneWidth, -laneY, laneWidth, 0, LaneType::tram));
+                else if (i == 3)
+                    this->lanes2.push_back(new Lane(laneX + laneWidth, -laneY, laneWidth, 180, LaneType::tram));
+            }
+            laneX = firstAsphaltLaneX;
+            laneY = firstAsphaltLaneY;
             this->lanes.push_back(new Lane(laneX, laneY, this->laneWidth * .16f, angle, LaneType::outAsphalt));
             for (int j = start; j < lanes[i].size(); j++)
             {
                 float smallLaneMarginX = .0f, smallLaneMarginY = .0f;
                 if (i == 3)
                 {
-                    laneX = j*(laneWidth + smallLaneWidth);
+                    laneX = j * (laneWidth + smallLaneWidth);
                     smallLaneMarginX = this->laneWidth;
                 }
                 else if (i == 2)
                 {
-                    laneX = -j*(laneWidth + smallLaneWidth);
+                    laneX = -j * (laneWidth + smallLaneWidth);
                     smallLaneMarginX = -this->laneWidth;
                 }
                 else if (i == 0)
                 {
-                    laneY = j*(laneWidth + smallLaneWidth);
+                    laneY = j * (laneWidth + smallLaneWidth);
                     smallLaneMarginY = this->laneWidth;
                 }
                 else if (i == 1)
                 {
-                    laneY = -j*(laneWidth + smallLaneWidth);
+                    laneY = -j * (laneWidth + smallLaneWidth);
                     smallLaneMarginY = -this->laneWidth;
                 }
                 this->lanes.push_back(new Lane(laneX, laneY, this->laneWidth, angle, lanes[i][j]));
@@ -148,25 +153,25 @@ public:
                     this->lanes.push_back(new Lane(laneX + smallLaneMarginX, laneY + smallLaneMarginY, smallLaneWidth, angle, LaneType::outAsphalt));
                 if (i == 0)
                 {
-                    this->lanes2.push_back(new Lane(-firstAsphaltLaneX, firstAsphaltLaneY+smallLaneWidth, this->laneWidth * .16f, -angle, LaneType::outAsphalt));
-                    this->lanes2.push_back(new Lane(-laneX, laneY+this->laneWidth, this->laneWidth, -angle, lanes[i][j]));
+                    this->lanes2.push_back(new Lane(-firstAsphaltLaneX, firstAsphaltLaneY + smallLaneWidth, this->laneWidth * .16f, -angle, LaneType::outAsphalt));
+                    this->lanes2.push_back(new Lane(-laneX, laneY + this->laneWidth, this->laneWidth, -angle, lanes[i][j]));
                     if (j < lanes[i].size() - 1)
-                        this->lanes2.push_back(new Lane(-(laneX + smallLaneMarginX), (laneY + smallLaneMarginY)+smallLaneWidth, smallLaneWidth, -angle, LaneType::inAsphalt));
+                        this->lanes2.push_back(new Lane(-(laneX + smallLaneMarginX), (laneY + smallLaneMarginY) + smallLaneWidth, smallLaneWidth, -angle, LaneType::inAsphalt));
                     else
-                        this->lanes2.push_back(new Lane(-(laneX + smallLaneMarginX), (laneY + smallLaneMarginY)+smallLaneWidth, smallLaneWidth, -angle, LaneType::outAsphalt));
+                        this->lanes2.push_back(new Lane(-(laneX + smallLaneMarginX), (laneY + smallLaneMarginY) + smallLaneWidth, smallLaneWidth, -angle, LaneType::outAsphalt));
                 }
                 else if (i == 1)
                 {
-                    this->lanes2.push_back(new Lane(-firstAsphaltLaneX, firstAsphaltLaneY-smallLaneWidth, this->laneWidth * .16f, -angle, LaneType::outAsphalt));
-                    this->lanes2.push_back(new Lane(-laneX, laneY-this->laneWidth, this->laneWidth, -angle, lanes[i][j]));
+                    this->lanes2.push_back(new Lane(-firstAsphaltLaneX, firstAsphaltLaneY - smallLaneWidth, this->laneWidth * .16f, -angle, LaneType::outAsphalt));
+                    this->lanes2.push_back(new Lane(-laneX, laneY - this->laneWidth, this->laneWidth, -angle, lanes[i][j]));
                     if (j < lanes[i].size() - 1)
-                        this->lanes2.push_back(new Lane(-(laneX + smallLaneMarginX), (laneY + smallLaneMarginY)-smallLaneWidth, smallLaneWidth, -angle, LaneType::inAsphalt));
+                        this->lanes2.push_back(new Lane(-(laneX + smallLaneMarginX), (laneY + smallLaneMarginY) - smallLaneWidth, smallLaneWidth, -angle, LaneType::inAsphalt));
                     else
-                        this->lanes2.push_back(new Lane(-(laneX + smallLaneMarginX), (laneY + smallLaneMarginY)-smallLaneWidth, smallLaneWidth, -angle, LaneType::outAsphalt));
+                        this->lanes2.push_back(new Lane(-(laneX + smallLaneMarginX), (laneY + smallLaneMarginY) - smallLaneWidth, smallLaneWidth, -angle, LaneType::outAsphalt));
                 }
                 else if (i == 2)
                 {
-                    this->lanes2.push_back(new Lane(-firstAsphaltLaneX+smallLaneWidth, firstAsphaltLaneY, this->laneWidth * .16f, angle, LaneType::outAsphalt));
+                    this->lanes2.push_back(new Lane(-firstAsphaltLaneX + smallLaneWidth, firstAsphaltLaneY, this->laneWidth * .16f, angle, LaneType::outAsphalt));
                     this->lanes2.push_back(new Lane(-laneX + this->laneWidth, laneY, this->laneWidth, -angle, lanes[i][j]));
                     if (j < lanes[i].size() - 1)
                         this->lanes2.push_back(new Lane(-(laneX + smallLaneMarginX) + smallLaneWidth, (laneY + smallLaneMarginY), smallLaneWidth, -angle, LaneType::inAsphalt));
@@ -175,7 +180,7 @@ public:
                 }
                 else if (i == 3)
                 {
-                    this->lanes2.push_back(new Lane(-firstAsphaltLaneX-smallLaneWidth, firstAsphaltLaneY, this->laneWidth * .16f, angle, LaneType::outAsphalt));
+                    this->lanes2.push_back(new Lane(-firstAsphaltLaneX - smallLaneWidth, firstAsphaltLaneY, this->laneWidth * .16f, angle, LaneType::outAsphalt));
                     this->lanes2.push_back(new Lane(-laneX - this->laneWidth, laneY, this->laneWidth, -angle, lanes[i][j]));
                     if (j < lanes[i].size() - 1)
                         this->lanes2.push_back(new Lane(-(laneX + smallLaneMarginX) - smallLaneWidth, (laneY + smallLaneMarginY), smallLaneWidth, -angle, LaneType::inAsphalt));
@@ -186,7 +191,7 @@ public:
         }
 
         //cout
-        std::cout << "Intersection created. Center size: " << this->centerSize << " Max Lanes: " << max << "\n";
+        std::cout << "Intersection created. Center size: " << this->centerWidth << "x" << this->centerHeight << "\n";
     }
 
     void draw(sf::RenderWindow &window)
@@ -198,5 +203,28 @@ public:
         if (!lanes.empty())
             for (auto it : lanes)
                 it->draw(window);
+    }
+    void addVehicles(CarCategory category, int amount)
+    {
+        for (auto i : this->lanes)
+            if (i->getRotation() == 0)
+            {
+                i->addVehicle(Direction::up, category, amount);
+            }
+    }
+    void go()
+    {
+        for (auto i : this->lanes)
+        {
+            if (i->getRotation() == 0)
+            {
+                if (i->getType() == LaneType::asphaltRight)
+                {
+                    i->go(Direction::up, Direction::right, sf::Vector2f(i->getPosition().x + (laneWidth * 1.16f), i->getPosition().y));
+                }
+                else
+                    i->go(Direction::up);
+            }
+        }
     }
 };
