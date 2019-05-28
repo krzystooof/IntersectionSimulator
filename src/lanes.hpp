@@ -74,7 +74,7 @@ public:
     {
         std::cout << "Lane deleted\n";
     }
-    void addVehicle(Direction direction, CarCategory category)
+    void addVehicle(CarCategory category)
     {
         float x, y, speedMultiplier;
         if (this->lane.getRotation() == 0)
@@ -87,15 +87,15 @@ public:
             x = this->lane.getPosition().x;
             y = -399;
         }
-        else if (this->lane.getRotation() == 270)
+        else if (this->lane.getRotation() == 90)
         {
             y = this->lane.getPosition().y;
-            x = 399;
+            x = -399;
         }
         else if (this->lane.getRotation() == 270)
         {
             y = this->lane.getPosition().y;
-            x = -399;
+            x = 399;
         }
 
         if (category == CarCategory::car)
@@ -107,10 +107,10 @@ public:
 
         cars.push_back(new Car(this->width, x, y, category, speedMultiplier));
     }
-    void addVehicle(Direction direction, CarCategory category, int amount)
+    void addVehicle(CarCategory category, int amount)
     {
         for (int i = 0; i < amount; i++)
-            this->addVehicle(direction, category);
+            this->addVehicle(category);
     }
     void go(Direction direction)
     {

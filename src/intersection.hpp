@@ -15,6 +15,11 @@ private:
     float laneWidth = 0;
 
 public:
+    ~Intersection(){
+        for(auto i:lanes) delete(i);
+        for(auto i:lanes2) delete(i);
+        std::cout<<"Intersection deleted\n";
+    }
     Intersection()
     {
         //texture
@@ -151,6 +156,7 @@ public:
                     this->lanes.push_back(new Lane(laneX + smallLaneMarginX, laneY + smallLaneMarginY, smallLaneWidth, angle, LaneType::inAsphalt));
                 else
                     this->lanes.push_back(new Lane(laneX + smallLaneMarginX, laneY + smallLaneMarginY, smallLaneWidth, angle, LaneType::outAsphalt));
+
                 if (i == 0)
                 {
                     this->lanes2.push_back(new Lane(-firstAsphaltLaneX, firstAsphaltLaneY + smallLaneWidth, this->laneWidth * .16f, -angle, LaneType::outAsphalt));
@@ -207,23 +213,51 @@ public:
     void addVehicles(CarCategory category, int amount)
     {
         for (auto i : this->lanes)
-            if (i->getRotation() == 0)
-            {
-                i->addVehicle(Direction::up, category, amount);
-            }
+            if (i->getType() == LaneType::asphalt || i->getType() == LaneType::asphaltRight || i->getType() == LaneType::asphaltLeft || i->getType() == LaneType::tram)
+                i->addVehicle(category, amount);
     }
     void go()
     {
         for (auto i : this->lanes)
         {
-            if (i->getRotation() == 0)
+            if (i->getType() == LaneType::asphalt || i->getType() == LaneType::asphaltRight || i->getType() == LaneType::asphaltLeft || i->getType() == LaneType::tram)
             {
-                if (i->getType() == LaneType::asphaltRight)
+                if (i->getRotation() == 0)
                 {
-                    i->go(Direction::up, Direction::right, sf::Vector2f(i->getPosition().x + (laneWidth * 1.16f), i->getPosition().y));
+                    if (i->getType() == LaneType::asphaltRight)
+                    {
+                        i->go(Direction::up, Direction::right, sf::Vector2f(i->getPosition().x, i->getPosition().y - (laneWidth * 1.16f)));
+                    }
+                    else
+                        i->go(Direction::up);
                 }
-                else
-                    i->go(Direction::up);
+                if (i->getRotation() == 180)
+                {
+                    if (i->getType() == LaneType::asphaltRight)
+                    {
+                        i->go(Direction::down, Direction::left, sf::Vector2f(i->getPosition().x, i->getPosition().y + (laneWidth * 1.16f)));
+                    }
+                    else
+                        i->go(Direction::down);
+                }
+                if (i->getRotation() == 90)
+                {
+                    if (i->getType() == LaneType::asphaltRight)
+                    {
+                        i->go(Direction::right, Direction::down, sf::Vector2f(i->getPosition().x + (laneWidth * 1.16f), i->getPosition().y));
+                    }
+                    else
+                        i->go(Direction::right);
+                }
+                if (i->getRotation() == 270)
+                {
+                    if (i->getType() == LaneType::asphaltRight)
+                    {
+                        i->go(Direction::left, Direction::up, sf::Vector2f(i->getPosition().x - (laneWidth * 1.16f), i->getPosition().y + (laneWidth * 1.16f)));
+                    }
+                    else
+                        i->go(Direction::left);
+                }
             }
         }
     }

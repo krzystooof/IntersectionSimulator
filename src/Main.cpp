@@ -30,10 +30,10 @@ int main()
 	sf::View view(sf::Vector2f(0.0f,0.0f), sf::Vector2f(WINDOW_SIZE,WINDOW_SIZE));
 	std::vector<Car> cars;
 	window.setFramerateLimit(60);
-	std::vector<LaneType> right {LaneType::tram,LaneType::asphalt,LaneType::asphalt};
+	std::vector<LaneType> right {LaneType::tram,LaneType::asphalt,LaneType::asphaltRight};
 	std::vector<LaneType> left {LaneType::asphalt,LaneType::asphalt};
 	Intersection intersection(std::vector<std::vector<LaneType>> {right,right,right,right});
-
+	intersection.addVehicles(CarCategory::car,10);
 	// std::vector<Lane> lanes;
 	// Lane lane1(-5,0.0f,5,0,LaneType::inAsphalt);
 	// Lane lane(0,0.0f,30,0,LaneType::asphalt);
@@ -61,6 +61,7 @@ int main()
 				break;
 			}
 		}
+		intersection.go();
 		intersection.draw(window);
 		// lane.go(Direction::up,Direction::right,sf::Vector2f(0.0,0.0));
 		// lane1.draw(window);
