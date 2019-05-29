@@ -14,6 +14,7 @@ class Lane
 {
 private:
     sf::RectangleShape lane;
+    sf::CircleShape lightShape;
     float height = 400.0f;
     float width;
     bool light;
@@ -22,25 +23,10 @@ private:
     LaneType type;
 
 public:
-    Lane()
-    {
-        //texture
-        this->laneTexture.loadFromFile("graphics/laneAsphalt.png");
-        this->laneTexture.setSmooth(true);
-
-        //dismensions
-        float ratio = float(this->laneTexture.getSize().x) / float(this->laneTexture.getSize().y);
-        this->width = this->height * ratio;
-        this->lane = sf::RectangleShape(sf::Vector2f(width, height));
-        this->lane.setTexture(&this->laneTexture);
-
-        //cout
-        std::cout << "Lane created at default position\n";
-    }
     Lane(float positionX, float positionY, float width, float rotation, LaneType type)
     {
         //texture
-        this->type=type;
+        this->type = type;
         if (type == LaneType::inAsphalt)
             this->laneTexture.loadFromFile("graphics/laneIn.png");
         else if (type == LaneType::outAsphalt)
@@ -48,9 +34,9 @@ public:
         else if (type == LaneType::asphalt)
             this->laneTexture.loadFromFile("graphics/laneAsphalt.png");
         else if (type == LaneType::asphaltLeft)
-            this->laneTexture.loadFromFile("graphics/laneAsphalt.png");//left lane
+            this->laneTexture.loadFromFile("graphics/laneAsphalt.png"); //left turn lane
         else if (type == LaneType::asphaltRight)
-            this->laneTexture.loadFromFile("graphics/laneAsphalt.png");//right lane
+            this->laneTexture.loadFromFile("graphics/laneAsphalt.png"); //right turn lane
         else if (type == LaneType::tram)
             this->laneTexture.loadFromFile("graphics/laneTram.png");
         else if (type == LaneType::tramNoBackground)
@@ -66,6 +52,7 @@ public:
         this->lane.setTexture(&this->laneTexture);
         this->lane.setPosition(sf::Vector2f(positionX, positionY));
         light = false;
+
 
         //cout
         std::cout << "Lane created at: " << positionX << " x " << positionY << std::endl;
@@ -103,8 +90,8 @@ public:
             speedMultiplier = ((rand() % 21) + 100) / 100.0;
         else if (category == CarCategory::longCar)
             speedMultiplier = ((rand() % 21) + 79) / 100.0;
-        else if (category == CarCategory::car)
-            speedMultiplier = ((rand() % 21) + 40) / 100.0;
+        else if (category == CarCategory::tram)
+            speedMultiplier = ((rand() % 21) + 60) / 100.0;
 
         cars.push_back(new Car(this->width, x, y, category, speedMultiplier));
     }
@@ -113,7 +100,7 @@ public:
         for (int i = 0; i < amount; i++)
             this->addVehicle(category);
     }
-    void go(Direction direction, Lane &lane)
+    void go(Direction direction)
     {
         if (cars.empty())
             ;
@@ -122,68 +109,71 @@ public:
             switch (direction)
             {
             case Direction::up:
-                cars[0]->goUp(lane);
+                cars[0]->goUp(this->lane.getPosition(), this->light);
                 for (int i = 1; i < cars.size(); i++)
                 {
-                    cars[i]->goUp(*cars[i - 1],lane);
+                    cars[i]->goUp(*cars[i - 1], this->lane.getPosition(), this->light);
                 }
                 break;
             case Direction::down:
-                cars[0]->goDown(lane);
+                cars[0]->goDown(this->lane.getPosition(), this->light);
                 for (int i = 1; i < cars.size(); i++)
                 {
-                    cars[i]->goDown(*cars[i - 1],lane);
+                    cars[i]->goDown(*cars[i - 1], this->lane.getPosition(), this->light);
                 }
                 break;
             case Direction::left:
-                cars[0]->goLeft(lane);
+                cars[0]->goLeft(this->lane.getPosition(), this->light);
                 for (int i = 1; i < cars.size(); i++)
                 {
-                    cars[i]->goLeft(*cars[i - 1],lane);
+                    cars[i]->goLeft(*cars[i - 1], this->lane.getPosition(), this->light);
                 }
                 break;
             case Direction::right:
-                cars[0]->goRight(lane);
+                cars[0]->goRight(this->lane.getPosition(), this->light);
                 for (int i = 1; i < cars.size(); i++)
                 {
-                    cars[i]->goRight(*cars[i - 1],lane);
+                    cars[i]->goRight(*cars[i - 1], this->lane.getPosition(), this->light);
                 }
                 break;
             }
         }
     }
-    void go(Direction firstDirection, Direction secondDirection, sf::Vector2f turningPosition, Lane &lane)
+    void go(Direction firstDirection, Direction secondDirection, sf::Vector2f turningPosition)
     {
         if (cars.empty())
             ;
         else
         {
-            cars[0]->turn(firstDirection, secondDirection, turningPosition,lane);
+            cars[0]->turn(firstDirection, secondDirection, turningPosition, this->lane.getPosition(), this->light, width);
             for (int i = 1; i < cars.size(); i++)
             {
-                cars[i]->turn(firstDirection, secondDirection, turningPosition, *cars[i - 1],lane);
+                cars[i]->turn(firstDirection, secondDirection, turningPosition, *cars[i - 1], this->lane.getPosition(), this->light, width);
             }
         }
     }
     void draw(sf::RenderWindow &window)
     {
-
+        if(!light)this->lightShape.setFillColor(sf::Color::Green);
+        else this->lightShape.setFillColor(sf::Color::Red);
         window.draw(this->lane);
         if (!cars.empty())
         {
             for (auto it = cars.begin(); it != cars.end();)
             {
-                if (std::abs((*it)->getPosition().x) > 500 || std::abs((*it)->getPosition().y) > 500)
+                if (std::abs((*it)->getPosition().x) > 600 || std::abs((*it)->getPosition().y) > 600)
                 {
                     delete *it;
                     it = cars.erase(it);
                 }
-                else {
+                else
+                {
                     (*it)->draw(window);
                     it++;
                 }
             }
         }
+        window.draw(this->lightShape);
     }
     float getRotation() const
     {
@@ -193,16 +183,25 @@ public:
     {
         return this->lane.getPosition();
     }
-    LaneType getType() const{
+    LaneType getType() const
+    {
         return this->type;
     }
-    void changeLight(){
-        light=!light;
+    void changeLight()
+    {
+        light = !light;
     }
-    bool getLight() const{
+    bool getLight() const
+    {
         return light;
     }
-    sf::Vector2f getPosition() const{
+    sf::Vector2f getPosition()
+    {
         return this->lane.getPosition();
+    }
+    void showLight(){
+            this->lightShape = sf::CircleShape(this->width / 3, 15);
+            this->lightShape.setPosition(this->lane.getPosition().x, this->lane.getPosition().y);
+            this->lightShape.setRotation(this->lane.getRotation());
     }
 };
