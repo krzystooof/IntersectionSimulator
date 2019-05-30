@@ -23,8 +23,8 @@ int main()
 	bottomPanel.setViewport(sf::FloatRect(.0f, .75f, 1.f, .25f));
 	window.setFramerateLimit(60);
 	std::vector<LaneType> right{LaneType::tram, LaneType::asphalt, LaneType::asphaltRight};
-	std::vector<LaneType> left{LaneType::asphalt, LaneType::asphalt};
-	Intersection intersection(std::vector<std::vector<LaneType>>{right, right, right, right});
+	std::vector<LaneType> left{LaneType::asphalt};
+	Intersection intersection(std::vector<std::vector<LaneType>>{left, left,right, right});
 	intersection.addVehicles(10);
 	Menu menu = Menu();
 

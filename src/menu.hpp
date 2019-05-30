@@ -13,7 +13,7 @@ private:
 public:
     Menu()
     {
-        font.loadFromFile("src/BebasNeue-Regular.ttf");
+        font.loadFromFile("content/BebasNeue-Regular.ttf");
         question.setFont(font);
         answer.setFont(font);
         question.setCharacterSize(24);
@@ -49,7 +49,7 @@ public:
         getqanda();
     }
     void previousAnswer(){
-        answerNumber++;
+        answerNumber--;
         if(answerNumber<0)answerNumber=answers.size()-1;
         getqanda();
     }
