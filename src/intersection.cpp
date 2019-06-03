@@ -36,6 +36,10 @@ void Intersection::go()
                 {
                     i->go(Direction::up, Direction::right, sf::Vector2f(i->getPosition().x, i->getPosition().y - (laneWidth * 1.16f)));
                 }
+                else if (i->getType() == LaneType::asphaltLeft)
+                {
+                    i->go(Direction::up, Direction::left, sf::Vector2f(i->getPosition().x, i->getPosition().y - (leftLanes*(laneWidth * 1.16f))));
+                }
                 else
                     i->go(Direction::up);
             }
@@ -44,6 +48,10 @@ void Intersection::go()
                 if (i->getType() == LaneType::asphaltRight)
                 {
                     i->go(Direction::down, Direction::left, sf::Vector2f(i->getPosition().x, i->getPosition().y + (laneWidth * 1.16f)));
+                }
+                else if (i->getType() == LaneType::asphaltLeft)
+                {
+                    i->go(Direction::down, Direction::right, sf::Vector2f(i->getPosition().x, i->getPosition().y + (leftLanes * (laneWidth * 1.16f))));
                 }
                 else
                     i->go(Direction::down);
@@ -54,6 +62,10 @@ void Intersection::go()
                 {
                     i->go(Direction::right, Direction::down, sf::Vector2f(i->getPosition().x + (laneWidth * 1.16f), i->getPosition().y));
                 }
+                else if (i->getType() == LaneType::asphaltLeft)
+                {
+                    i->go(Direction::right, Direction::up, sf::Vector2f(i->getPosition().x + (upLanes * (laneWidth * 1.16f)), i->getPosition().y));
+                }
                 else
                     i->go(Direction::right);
             }
@@ -62,6 +74,10 @@ void Intersection::go()
                 if (i->getType() == LaneType::asphaltRight)
                 {
                     i->go(Direction::left, Direction::up, sf::Vector2f(i->getPosition().x - (laneWidth * 1.16f), i->getPosition().y + (laneWidth * 1.16f)));
+                }
+                else if (i->getType() == LaneType::asphaltLeft)
+                {
+                    i->go(Direction::left, Direction::up, sf::Vector2f(i->getPosition().x - (upLanes * (laneWidth * 1.16f)), i->getPosition().y + (laneWidth * 1.16f)));
                 }
                 else
                     i->go(Direction::left);

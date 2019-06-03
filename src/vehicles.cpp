@@ -235,14 +235,16 @@ void Car::turn(Direction firstDirection, Direction secondDirection, sf::Vector2f
         case Direction::left:
             if (goLeft(false, lightPosition, light))
             {
+
                 this->speed /= slowingSpeed;
                 goLeft(false, lightPosition, light);
                 going = true;
                 if (this->getRotation() > 271 || this->getRotation() < 269 || this->getRotation() == 0 || this->getRotation() == 180)
                 {
-                    float rotateSpeed = std::sqrt(1 / (turningPosition.y - this->car.getPosition().y)) * this->speed * 5 + .5f;
-                    if (firstDirection == Direction::down)
+                    float rotateSpeed = std::sqrt(std::abs(1 / (turningPosition.y - this->car.getPosition().y)) * this->speed * 5 + .5f);
+                    if (firstDirection == Direction::down){
                         this->car.rotate(rotateSpeed);
+                    }
                     else
                         this->car.rotate(-rotateSpeed);
                 }
@@ -256,7 +258,7 @@ void Car::turn(Direction firstDirection, Direction secondDirection, sf::Vector2f
                 going = true;
                 if (this->getRotation() < 89 || this->getRotation() > 91 || this->getRotation() == 0 || this->getRotation() == 180)
                 {
-                    float rotateSpeed = std::sqrt(1 / (this->car.getPosition().y - turningPosition.y)) * this->speed * 5 + .5f;
+                    float rotateSpeed = std::sqrt(std::abs(1 / (this->car.getPosition().y - turningPosition.y)) * this->speed * 5 + .5f);
                     if (firstDirection == Direction::down)
                         this->car.rotate(-rotateSpeed);
                     else
@@ -272,7 +274,7 @@ void Car::turn(Direction firstDirection, Direction secondDirection, sf::Vector2f
                 going = true;
                 if (this->getRotation() > 1 || this->getRotation() < 359 || this->getRotation() == 90 || this->getRotation() == 270)
                 {
-                    float rotateSpeed = std::sqrt(1 / (this->car.getPosition().x - turningPosition.x)) * this->speed * 5 + .5f;
+                    float rotateSpeed = std::sqrt(std::abs(1 / (this->car.getPosition().x - turningPosition.x)) * this->speed * 5 + .5f);
                     if (firstDirection == Direction::left)
                         this->car.rotate(rotateSpeed);
                     else
@@ -288,7 +290,7 @@ void Car::turn(Direction firstDirection, Direction secondDirection, sf::Vector2f
                 going = true;
                 if (this->getRotation() < 179 || this->getRotation() > 181 || this->getRotation() == 90 || this->getRotation() == 270)
                 {
-                    float rotateSpeed = std::sqrt(1 / (turningPosition.x - this->car.getPosition().x)) * this->speed * 5 + .5f;
+                    float rotateSpeed = std::sqrt(std::abs(1 / (turningPosition.x - this->car.getPosition().x)) * this->speed * 5 + .5f);
                     if (firstDirection == Direction::left)
                         this->car.rotate(-rotateSpeed);
                     else

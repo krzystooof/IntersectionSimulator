@@ -11,6 +11,7 @@ private:
     std::vector<Lane *> lanes;
     std::vector<Lane *> lanes2;
     float laneWidth = 0;
+    int leftLanes, upLanes;
 
 public:
     ~Intersection()
@@ -48,6 +49,9 @@ public:
         this->center.setPosition(sf::Vector2f(-centerWidth / 2, -centerHeight / 2));
         this->center.setTexture(&this->centerTexture);
         this->laneWidth = this->centerWidth / (lanes[2].size() + lanes[3].size()) * .863f;
+
+        this->leftLanes = lanes[0].size();
+        this->upLanes = lanes[2].size();
 
         for (int i = 0; i < lanes.size(); i++)
         {
@@ -118,13 +122,25 @@ public:
             {
                 this->lanes.push_back(new Lane(laneX, laneY, laneWidth, angle, LaneType::tram));
                 if (i == 0)
+                {
+                    this->lanes2.push_back(new Lane(laneX, laneY + laneWidth, laneWidth, -angle, LaneType::tramNoBackground));
                     this->lanes2.push_back(new Lane(-laneX, laneY + laneWidth, laneWidth, -angle, LaneType::tram));
+                }
                 else if (i == 1)
+                {
+                    this->lanes2.push_back(new Lane(laneX, laneY - laneWidth, laneWidth, -angle, LaneType::tramNoBackground));
                     this->lanes2.push_back(new Lane(-laneX, laneY - laneWidth, laneWidth, -angle, LaneType::tram));
+                }
                 else if (i == 2)
+                {
+                    this->lanes2.push_back(new Lane(laneX - laneWidth, laneY, laneWidth, 0, LaneType::tramNoBackground));
                     this->lanes2.push_back(new Lane(laneX - laneWidth, -laneY, laneWidth, 0, LaneType::tram));
+                }
                 else if (i == 3)
+                {
+                    this->lanes2.push_back(new Lane(laneX + laneWidth, laneY, laneWidth, 180, LaneType::tramNoBackground));
                     this->lanes2.push_back(new Lane(laneX + laneWidth, -laneY, laneWidth, 180, LaneType::tram));
+                }
             }
             laneX = firstAsphaltLaneX;
             laneY = firstAsphaltLaneY;
