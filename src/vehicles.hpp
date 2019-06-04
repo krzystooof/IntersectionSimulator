@@ -12,7 +12,8 @@ enum class CarCategory
 {
     car,
     longCar,
-    tram
+    tram,
+    pedestrian
 };
 //TODO delete objects when out of view, turning in sine function
 class Car
@@ -49,6 +50,11 @@ public:
             textureNumber = rand() % 2;
             this->carTexture.loadFromFile(directory + "tramCar" + std::to_string(textureNumber) + ".png");
             out = "Tram";
+        }
+        else if (type == CarCategory::pedestrian)
+        {
+            this->carTexture.loadFromFile(directory + "carPedestrians.png");
+            out = "Pedestrian";
         }
         this->carTexture.setSmooth(true);
         //dismensions

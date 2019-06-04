@@ -8,18 +8,19 @@ enum class LaneType
     asphaltLeft,
     asphaltRight,
     tram,
-    tramNoBackground
+    tramNoBackground,
+    pedestrian,
+    pedestrianNoBackground
 };
 
 class Lane
 {
 private:
-    sf::RectangleShape lane;
-    sf::CircleShape lightShape;
+    sf::RectangleShape lane, lightShape;
     float height = 400.0f;
     float width;
     bool light;
-    sf::Texture laneTexture;
+    sf::Texture laneTexture, lightGreenTexture, lightRedTexture;
     std::vector<Car *> cars;
     LaneType type;
 
@@ -35,13 +36,21 @@ public:
         else if (type == LaneType::asphalt)
             this->laneTexture.loadFromFile("content/laneAsphalt.png");
         else if (type == LaneType::asphaltLeft)
-            this->laneTexture.loadFromFile("content/laneAsphalt.png"); //left turn lane
+            this->laneTexture.loadFromFile("content/laneAsphaltLeftTurn.png");
         else if (type == LaneType::asphaltRight)
-            this->laneTexture.loadFromFile("content/laneAsphalt.png"); //right turn lane
+            this->laneTexture.loadFromFile("content/laneAsphaltRightTurn.png");
         else if (type == LaneType::tram)
             this->laneTexture.loadFromFile("content/laneTram.png");
         else if (type == LaneType::tramNoBackground)
             this->laneTexture.loadFromFile("content/laneTramNobackground.png");
+        else if (type == LaneType::pedestrian)
+            this->laneTexture.loadFromFile("content/lanePevement.png");
+        else if (type == LaneType::pedestrianNoBackground)
+            this->laneTexture.loadFromFile("content/lanePavementNoBackground.png");
+        this->lightGreenTexture.loadFromFile("content/greenLight.png");
+        this->lightRedTexture.loadFromFile("content/redLight.png");
+        this->lightRedTexture.setSmooth(true);
+        this->lightGreenTexture.setSmooth(true);
         this->laneTexture.setSmooth(true);
 
         //dismensions
@@ -74,4 +83,5 @@ public:
     bool getLight() const;
     sf::Vector2f getPosition();
     void showLight();
+    void changeLaneType(LaneType type);
 };

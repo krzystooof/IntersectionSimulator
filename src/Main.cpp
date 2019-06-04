@@ -71,6 +71,7 @@ int main()
 		if(timesBuild==1){
 			timesBuild++;
 			intersection = new Intersection(lanes);
+			intersection->addVehicles(10);
 		}
 		sf::Event event2;
 		while (simulationWindow.pollEvent(event2))

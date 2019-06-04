@@ -29,6 +29,8 @@ void Lane::addVehicle(CarCategory category)
         speedMultiplier = ((rand() % 21) + 79) / 100.0;
     else if (category == CarCategory::tram)
         speedMultiplier = ((rand() % 21) + 60) / 100.0;
+    else if (category == CarCategory::pedestrian)
+        speedMultiplier = ((rand() % 21) + 20) / 100.0;
 
     cars.push_back(new Car(this->width, x, y, category, speedMultiplier));
 }
@@ -92,9 +94,9 @@ void Lane::go(Direction firstDirection, Direction secondDirection, sf::Vector2f 
 void Lane::draw(sf::RenderWindow &window)
 {
     if (!light)
-        this->lightShape.setFillColor(sf::Color::Green);
+        this->lightShape.setTexture(&this->lightGreenTexture);
     else
-        this->lightShape.setFillColor(sf::Color::Red);
+        this->lightShape.setTexture(&this->lightRedTexture);
     window.draw(this->lane);
     if (!cars.empty())
     {
@@ -140,7 +142,28 @@ sf::Vector2f Lane::getPosition()
 }
 void Lane::showLight()
 {
-    this->lightShape = sf::CircleShape(this->width / 3, 15);
+    this->lightShape = sf::RectangleShape(sf::Vector2f(this->width/1.5 , this->width/1.5));
     this->lightShape.setPosition(this->lane.getPosition().x, this->lane.getPosition().y);
     this->lightShape.setRotation(this->lane.getRotation());
+}
+void Lane::changeLaneType(LaneType type)
+{
+    if (type == LaneType::inAsphalt)
+        this->laneTexture.loadFromFile("content/laneIn.png");
+    else if (type == LaneType::outAsphalt)
+        this->laneTexture.loadFromFile("content/laneOut.png");
+    else if (type == LaneType::asphalt)
+        this->laneTexture.loadFromFile("content/laneAsphalt.png");
+    else if (type == LaneType::asphaltLeft)
+        this->laneTexture.loadFromFile("content/laneAsphaltLeftTurn.png");
+    else if (type == LaneType::asphaltRight)
+        this->laneTexture.loadFromFile("content/laneAsphaltRightTurn.png");
+    else if (type == LaneType::tram)
+        this->laneTexture.loadFromFile("content/laneTram.png");
+    else if (type == LaneType::tramNoBackground)
+        this->laneTexture.loadFromFile("content/laneTramNobackground.png");
+    else if (type == LaneType::pedestrian)
+        this->laneTexture.loadFromFile("content/lanePevement.png");
+    else if (type == LaneType::pedestrianNoBackground)
+        this->laneTexture.loadFromFile("content/lanePavementNoBackground.png");
 }
