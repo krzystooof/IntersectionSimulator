@@ -29,6 +29,25 @@ void Intersection::addVehicles(int amount)
     //     if (i->getType() == LaneType::pedestrian)
     //         i->addVehicle(CarCategory::pedestrian, amount);
 }
+void Intersection::addVehicles(int amount, Direction direction)
+{
+    int angle;
+    if (direction == Direction::up)
+        angle = 0;
+    else if (direction == Direction::down)
+        angle = 180;
+    else if (direction == Direction::right)
+        angle = 90;
+    else if (direction == Direction::left)
+        angle = 270;
+    for (auto i : this->lanes)
+    {
+        if (i->getRotation() == angle && (i->getType() == LaneType::asphalt || i->getType() == LaneType::asphaltRight || i->getType() == LaneType::asphaltLeft))
+            i->addVehicle(CarCategory::car, amount);
+        else if (i->getRotation() == angle && i->getType() == LaneType::tram)
+            i->addVehicle(CarCategory::tram, amount);
+    }
+}
 void Intersection::go()
 {
     for (auto i : this->lanes)

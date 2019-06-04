@@ -14,6 +14,7 @@ int timesBuild=0;
 int main()
 {
 	srand(time(NULL));
+	sf::Clock clock;
 
 	sf::RenderWindow simulationWindow(sf::VideoMode(800.0f, 800.0f), ACTIVITY_TITLE, sf::Style::Close);
 	simulationWindow.setVisible(false);
@@ -25,6 +26,7 @@ int main()
 	Menu menu = Menu();
 	std::vector<std::vector<LaneType>> lanes{{LaneType::asphalt}, {LaneType::asphalt}, {LaneType::asphalt}, {LaneType::asphalt}};
 	Intersection *intersection = new Intersection(lanes);
+	sf::Time time = clock.getElapsedTime();
 
 	while (menuWindow.isOpen())
 	{
@@ -68,10 +70,32 @@ int main()
 	}
 	while (simulationWindow.isOpen())
 	{
+
 		if(timesBuild==1){
 			timesBuild++;
 			intersection = new Intersection(lanes);
-			intersection->addVehicles(10);
+		}
+		if(menu.getGo()){
+			std::vector<int> times = menu.getTimes();
+			sf::Time elapsedTime = clock.getElapsedTime()-time;
+			if(elapsedTime.asSeconds()>=times[0]){
+				intersection->addVehicles(1,Direction::right);
+				time = clock.getElapsedTime();
+			}
+			if(elapsedTime.asSeconds()>=times[1]){
+				intersection->addVehicles(1,Direction::left);
+				time = clock.getElapsedTime();
+			}
+			if(elapsedTime.asSeconds()>=times[2]){
+				intersection->addVehicles(1,Direction::down);
+				time = clock.getElapsedTime();
+			}
+			if(elapsedTime.asSeconds()>=times[3]){
+				intersection->addVehicles(1,Direction::up);
+				time = clock.getElapsedTime();
+			}
+			intersection->go();
+
 		}
 		sf::Event event2;
 		while (simulationWindow.pollEvent(event2))
@@ -89,7 +113,6 @@ int main()
 				break;
 			}
 		}
-		intersection->go();
 		simulationWindow.setView(simulation);
 		intersection->draw(simulationWindow);
 		simulationWindow.display();

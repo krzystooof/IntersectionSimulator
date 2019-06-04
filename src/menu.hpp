@@ -5,14 +5,14 @@ class Menu
 {
 private:
     sf::Text question, answer, title, tip;
-    int questionNumber = 0, maxQuestionsNumber = 8, answerNumber = 0;
+    int questionNumber = 0, maxQuestionsNumber = 12, answerNumber = 0;
     std::string questions, titles, tips;
     std::vector<std::string> answers;
     sf::Font font;
     std::vector<LaneType> leftRight, upDown;
+    std::vector<int> times;
     Intersection intersection();
-    bool build = false;
-    bool close = false;
+    bool build = false, close = false, go = false;
 
 public:
     Menu()
@@ -99,8 +99,23 @@ public:
                 upDown.push_back(LaneType::asphaltRight);
             }
             build = true;
+            break;
+        case 9:
+            times.push_back((answerNumber + 1) * 2);
+            break;
+        case 10:
+            times.push_back((answerNumber + 1) * 2);
+            break;
+        case 11:
+            times.push_back((answerNumber + 1) * 2);
+            break;
+        case 12:
+        {
+            times.push_back((answerNumber + 1) * 2);
+            go = true;
             close = true;
             break;
+        }
         }
         answerNumber = 0;
         questionNumber++;
@@ -162,6 +177,24 @@ public:
             questions = "Right turn lane?";
             answers = std::vector<std::string>{"yes", "no"};
             break;
+        case 9:
+            titles = "Intersection Building: times";
+            questions = "Left - new car spawn after:";
+            answers = std::vector<std::string>{"2 sec", "4 sec", "6 sec", "8 sec", "10 sec"};
+            tips = "It affects all lanes on this side of the intersection";
+            break;
+        case 10:
+            questions = "Right - new car spawn after:";
+            answers = std::vector<std::string>{"2 sec", "4 sec", "6 sec", "8 sec", "10 sec"};
+            break;
+        case 11:
+            questions = "Up - new car spawn after:";
+            answers = std::vector<std::string>{"2 sec", "4 sec", "6 sec", "8 sec", "10 sec"};
+            break;
+        case 12:
+            questions = "Down - new car spawn after:";
+            answers = std::vector<std::string>{"2 sec", "4 sec", "6 sec", "8 sec", "10 sec"};
+            break;
         }
         question.setString(questions);
         answer.setString(answers[answerNumber]);
@@ -176,6 +209,10 @@ public:
     {
         return upDown;
     }
+    std::vector<int> getTimes() const
+    {
+        return times;
+    }
     bool getBuild() const
     {
         return build;
@@ -183,5 +220,9 @@ public:
     bool getClose() const
     {
         return close;
+    }
+    bool getGo() const
+    {
+        return go;
     }
 };

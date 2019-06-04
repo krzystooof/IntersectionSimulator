@@ -266,6 +266,7 @@ public:
 
     void draw(sf::RenderWindow &window);
     void addVehicles(int amount);
+    void addVehicles(int amount,Direction direction);
     void go();
     void changeLight();
 };
