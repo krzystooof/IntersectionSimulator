@@ -5,7 +5,7 @@ class Menu
 {
 private:
     sf::Text question, answer, title, tip;
-    int questionNumber = 0, maxQuestionsNumber = 12, answerNumber = 0;
+    int questionNumber = 0, maxQuestionsNumber = 13, answerNumber = 0;
     std::string questions, titles, tips;
     std::vector<std::string> answers;
     sf::Font font;
@@ -36,7 +36,7 @@ public:
         tip.setFont(font);
         tip.setCharacterSize(14);
         tip.setColor(sf::Color::White);
-        tip.setPosition(0.0f, 100.0f);
+        tip.setPosition(0.0f, 50.0f);
 
         nextQuestion();
     }
@@ -52,13 +52,13 @@ public:
         switch (questionNumber)
         {
         case 1:
-            if (answerNumber == 0)
+            if (answerNumber == 1)
             {
                 leftRight.push_back(LaneType::tram);
             }
             break;
         case 2:
-            if (answerNumber == 0)
+            if (answerNumber == 1)
             {
                 leftRight.push_back(LaneType::asphaltLeft);
             }
@@ -70,19 +70,19 @@ public:
             }
             break;
         case 4:
-            if (answerNumber == 0)
+            if (answerNumber == 1)
             {
                 leftRight.push_back(LaneType::asphaltRight);
             }
             break;
         case 5:
-            if (answerNumber == 0)
+            if (answerNumber == 1)
             {
                 upDown.push_back(LaneType::tram);
             }
             break;
         case 6:
-            if (answerNumber == 0)
+            if (answerNumber == 1)
             {
                 upDown.push_back(LaneType::asphaltLeft);
             }
@@ -94,7 +94,7 @@ public:
             }
             break;
         case 8:
-            if (answerNumber == 0)
+            if (answerNumber == 1)
             {
                 upDown.push_back(LaneType::asphaltRight);
             }
@@ -112,6 +112,10 @@ public:
         case 12:
         {
             times.push_back((answerNumber + 1) * 2);
+            break;
+        }
+        case 13:
+        {
             go = true;
             close = true;
             break;
@@ -144,12 +148,12 @@ public:
         case 1:
             titles = "Intersection Building: left and right side";
             questions = "Tram lanes?";
-            answers = std::vector<std::string>{"yes", "no"};
+            answers = std::vector<std::string>{"no", "yes"};
             tips = "Use arrows to change Q and A. Changes are automaticaly saved";
             break;
         case 2:
             questions = "Left turn lane?";
-            answers = std::vector<std::string>{"yes", "no"};
+            answers = std::vector<std::string>{"no", "yes"};
             break;
         case 3:
             questions = "How much straight lanes?";
@@ -157,17 +161,17 @@ public:
             break;
         case 4:
             questions = "Right turn lane?";
-            answers = std::vector<std::string>{"yes", "no"};
+            answers = std::vector<std::string>{"no", "yes"};
             break;
         case 5:
             titles = "Intersection Building: up and down side";
             questions = "Tram lanes?";
-            answers = std::vector<std::string>{"yes", "no"};
+            answers = std::vector<std::string>{"no", "yes"};
             tips = "Use arrows to change Q and A. Changes are automaticaly saved";
             break;
         case 6:
             questions = "Left turn lane?";
-            answers = std::vector<std::string>{"yes", "no"};
+            answers = std::vector<std::string>{"no", "yes"};
             break;
         case 7:
             questions = "How much straight lanes?";
@@ -175,7 +179,7 @@ public:
             break;
         case 8:
             questions = "Right turn lane?";
-            answers = std::vector<std::string>{"yes", "no"};
+            answers = std::vector<std::string>{"no", "yes"};
             break;
         case 9:
             titles = "Intersection Building: times";
@@ -194,6 +198,11 @@ public:
         case 12:
             questions = "Down - new car spawn after:";
             answers = std::vector<std::string>{"2 sec", "4 sec", "6 sec", "8 sec", "10 sec"};
+            break;
+        case 13:
+            titles = "Intersection Building: traffic lights";
+            questions = "Traffic lights steering:";
+            answers = std::vector<std::string>{"smart"};
             break;
         }
         question.setString(questions);

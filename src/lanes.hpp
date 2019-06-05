@@ -23,6 +23,7 @@ private:
     sf::Texture laneTexture, lightGreenTexture, lightRedTexture;
     std::vector<Car *> cars;
     LaneType type;
+    int carsNearEnd,group;
 
 public:
     Lane(float positionX, float positionY, float width, float rotation, LaneType type)
@@ -79,9 +80,12 @@ public:
     float getRotation() const;
     sf::Vector2f getPosition() const;
     LaneType getType() const;
-    void changeLight();
+    void changeLight(bool green);
     bool getLight() const;
     sf::Vector2f getPosition();
     void showLight();
     void changeLaneType(LaneType type);
+    void setGroup(int group);
+    int getGroup() const;
+    int getCarsNearEnd() const;
 };

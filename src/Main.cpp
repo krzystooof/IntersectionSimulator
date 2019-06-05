@@ -2,6 +2,7 @@
 #include <string>
 #include <stdlib.h>
 #include <time.h>
+#include <thread>
 #include "vehicles.hpp"
 #include "lanes.hpp"
 #include "intersection.hpp"
@@ -9,7 +10,7 @@
 #include "Main.hpp"
 
 const std::string ACTIVITY_TITLE = "Intersection Simulator";
-int timesBuild=0;
+int timesBuild = 0;
 
 int main()
 {
@@ -19,14 +20,15 @@ int main()
 	sf::RenderWindow simulationWindow(sf::VideoMode(800.0f, 800.0f), ACTIVITY_TITLE, sf::Style::Close);
 	simulationWindow.setVisible(false);
 	sf::View simulation(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(800.0f, 800.0f));
-	sf::RenderWindow menuWindow(sf::VideoMode(800.0f,200.0f), ACTIVITY_TITLE+" menu", sf::Style::Close);
+	sf::RenderWindow menuWindow(sf::VideoMode(800.0f, 200.0f), ACTIVITY_TITLE + " menu", sf::Style::Close);
 	sf::View bottomPanel(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(800.0f, 200.0f));
 	menuWindow.setFramerateLimit(60);
 	simulationWindow.setFramerateLimit(60);
 	Menu menu = Menu();
 	std::vector<std::vector<LaneType>> lanes{{LaneType::asphalt}, {LaneType::asphalt}, {LaneType::asphalt}, {LaneType::asphalt}};
 	Intersection *intersection = new Intersection(lanes);
-	sf::Time time = clock.getElapsedTime();
+	std::vector<sf::Time> time{clock.getElapsedTime(), clock.getElapsedTime(), clock.getElapsedTime(), clock.getElapsedTime()};
+	sf::Time lastChangeTime = clock.getElapsedTime();
 
 	while (menuWindow.isOpen())
 	{
@@ -50,7 +52,8 @@ int main()
 					menu.nextQuestion();
 				break;
 			}
-			if(menu.getBuild()&&timesBuild==0){
+			if (menu.getBuild() && timesBuild == 0)
+			{
 				timesBuild++;
 				lanes.clear();
 				lanes.push_back(menu.getLeftRight());
@@ -59,7 +62,8 @@ int main()
 				lanes.push_back(menu.getUpDown());
 			}
 		}
-		if(menu.getClose()){
+		if (menu.getClose())
+		{
 			menuWindow.close();
 			simulationWindow.setVisible(true);
 		}
@@ -71,31 +75,40 @@ int main()
 	while (simulationWindow.isOpen())
 	{
 
-		if(timesBuild==1){
+		if (timesBuild == 1)
+		{
 			timesBuild++;
 			intersection = new Intersection(lanes);
+			intersection->setGroups(LightChangingType::smart);
 		}
-		if(menu.getGo()){
+		if (menu.getGo())
+		{
 			std::vector<int> times = menu.getTimes();
-			sf::Time elapsedTime = clock.getElapsedTime()-time;
-			if(elapsedTime.asSeconds()>=times[0]){
-				intersection->addVehicles(1,Direction::right);
-				time = clock.getElapsedTime();
+			sf::Time elapsedTime = clock.getElapsedTime() - time[0];
+			if (elapsedTime.asSeconds() >= times[0])
+			{
+				intersection->addVehicles(1, Direction::right);
+				time[0] = clock.getElapsedTime();
 			}
-			if(elapsedTime.asSeconds()>=times[1]){
-				intersection->addVehicles(1,Direction::left);
-				time = clock.getElapsedTime();
+			elapsedTime = clock.getElapsedTime() - time[1];
+			if (elapsedTime.asSeconds() >= times[1])
+			{
+				intersection->addVehicles(1, Direction::left);
+				time[1] = clock.getElapsedTime();
 			}
-			if(elapsedTime.asSeconds()>=times[2]){
-				intersection->addVehicles(1,Direction::down);
-				time = clock.getElapsedTime();
+			elapsedTime = clock.getElapsedTime() - time[2];
+			if (elapsedTime.asSeconds() >= times[2])
+			{
+				intersection->addVehicles(1, Direction::down);
+				time[2] = clock.getElapsedTime();
 			}
-			if(elapsedTime.asSeconds()>=times[3]){
-				intersection->addVehicles(1,Direction::up);
-				time = clock.getElapsedTime();
+			elapsedTime = clock.getElapsedTime() - time[3];
+			if (elapsedTime.asSeconds() >= times[3])
+			{
+				intersection->addVehicles(1, Direction::up);
+				time[3] = clock.getElapsedTime();
 			}
 			intersection->go();
-
 		}
 		sf::Event event2;
 		while (simulationWindow.pollEvent(event2))
@@ -109,9 +122,15 @@ int main()
 
 			case sf::Event::KeyPressed:
 				if (event2.key.code == sf::Keyboard::Space)
-					intersection->changeLight();
-				break;
+					break;
 			}
+		}
+		sf::Time elapsedTime = clock.getElapsedTime() - lastChangeTime;
+
+		if (elapsedTime.asSeconds() > 5)
+		{
+			intersection->changeLight(LightChangingType::smart);
+			lastChangeTime=clock.getElapsedTime();
 		}
 		simulationWindow.setView(simulation);
 		intersection->draw(simulationWindow);
@@ -158,8 +177,8 @@ int main()
 // int main()
 // {
 // 	srand(time(NULL));
-
-// 	sf::RenderWindow window(sf::VideoMode(730.0f, 1000.0f), ACTIVITY_TITLE, sf::Style::Close);
+// 	bool light=false;
+// 	sf::RenderWindow window(sf::VideoMode(800.0f, 800.0f), ACTIVITY_TITLE, sf::Style::Close);
 // 	sf::View simulation(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(800.0f, 800.0f));
 // 	window.setFramerateLimit(60);
 // 	Car car(30,0,250,CarCategory::car,1);
@@ -176,12 +195,13 @@ int main()
 // 				break;
 
 // 			case sf::Event::KeyPressed:
+// 				light=!light;
 // 				break;
 // 			}
 // 		}
 
 // 		window.setView(simulation);
-// 		car.turn(Direction::up, Direction::left, sf::Vector2f(0, 0),sf::Vector2f(0,0),false,30);
+// 		car.turn(Direction::up, Direction::left, sf::Vector2f(0, -100),sf::Vector2f(0,100),light,30);
 // 		car.draw(window);
 // 		window.display();
 // 		window.clear();

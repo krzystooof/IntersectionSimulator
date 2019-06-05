@@ -100,8 +100,11 @@ void Lane::draw(sf::RenderWindow &window)
     window.draw(this->lane);
     if (!cars.empty())
     {
+        int carsNear = 0;
         for (auto it = cars.begin(); it != cars.end();)
         {
+            if (std::abs((*it)->getPosition().x) < std::abs(this->getPosition().x) + 100)
+                carsNear++;
             if (std::abs((*it)->getPosition().x) > 600 || std::abs((*it)->getPosition().y) > 600)
             {
                 delete *it;
@@ -113,6 +116,7 @@ void Lane::draw(sf::RenderWindow &window)
                 it++;
             }
         }
+        this->carsNearEnd = carsNear;
     }
     window.draw(this->lightShape);
 }
@@ -128,9 +132,12 @@ LaneType Lane::getType() const
 {
     return this->type;
 }
-void Lane::changeLight()
+void Lane::changeLight(bool green)
 {
-    light = !light;
+    if (green)
+        light = false;
+    else
+        light = true;
 }
 bool Lane::getLight() const
 {
@@ -142,7 +149,7 @@ sf::Vector2f Lane::getPosition()
 }
 void Lane::showLight()
 {
-    this->lightShape = sf::RectangleShape(sf::Vector2f(this->width/1.5 , this->width/1.5));
+    this->lightShape = sf::RectangleShape(sf::Vector2f(this->width / 1.5, this->width / 1.5));
     this->lightShape.setPosition(this->lane.getPosition().x, this->lane.getPosition().y);
     this->lightShape.setRotation(this->lane.getRotation());
 }
@@ -166,4 +173,16 @@ void Lane::changeLaneType(LaneType type)
         this->laneTexture.loadFromFile("content/lanePevement.png");
     else if (type == LaneType::pedestrianNoBackground)
         this->laneTexture.loadFromFile("content/lanePavementNoBackground.png");
+}
+void Lane::setGroup(int group)
+{
+    this->group = group;
+}
+int Lane::getGroup() const
+{
+    return this->group;
+}
+int Lane::getCarsNearEnd() const
+{
+    return this->carsNearEnd;
 }

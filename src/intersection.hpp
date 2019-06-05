@@ -2,13 +2,15 @@
 #include "lanes.hpp"
 #include <algorithm>
 
+enum class LightChangingType{smart};
+
 class Intersection
 {
 private:
     sf::RectangleShape center, backgorund;
     sf::Texture centerTexture, backgroundTexture;
     float centerWidth, centerHeight;
-    std::vector<Lane *> lanes,lanes2,lanes3;
+    std::vector<Lane *> lanes,lanes2;
     float laneWidth = 0;
     int leftLanes, upLanes;
 
@@ -159,7 +161,7 @@ public:
             }
             laneX = firstAsphaltLaneX;
             laneY = firstAsphaltLaneY;
-            this->lanes.push_back(new Lane(laneX, laneY, this->laneWidth * .16f, angle, LaneType::outAsphalt));
+            this->lanes2.push_back(new Lane(laneX, laneY, this->laneWidth * .16f, angle, LaneType::outAsphalt));
             for (int j = start; j <= lanes[i].size(); j++)
             {
                 float smallLaneMarginX = .0f, smallLaneMarginY = .0f;
@@ -268,5 +270,7 @@ public:
     void addVehicles(int amount);
     void addVehicles(int amount,Direction direction);
     void go();
-    void changeLight();
+    int getGreenLightGroup() const;
+    void setGroups(LightChangingType lightChangingType);
+    void changeLight(LightChangingType lightChangingType);
 };

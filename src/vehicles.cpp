@@ -59,10 +59,10 @@ void Car::turn(Direction firstDirection, Direction secondDirection, sf::Vector2f
         switch (secondDirection)
         {
         case Direction::left:
-            if (goLeft(previousCar, false, lightPosition, light))
+            if (go(firstDirection,secondDirection,previousCar, lightPosition, light))
             {
                 this->speed /= slowingSpeed;
-                goLeft(previousCar, false, lightPosition, light);
+                go(firstDirection,secondDirection,previousCar, lightPosition, light);
                 going = true;
                 if (this->getRotation() > 271 || this->getRotation() < 269 || this->getRotation() == 0 || this->getRotation() == 180)
                 {
@@ -75,10 +75,10 @@ void Car::turn(Direction firstDirection, Direction secondDirection, sf::Vector2f
             }
             break;
         case Direction::right:
-            if (goRight(previousCar, false, lightPosition, light))
+            if (go(firstDirection,secondDirection,previousCar, lightPosition, light))
             {
                 this->speed /= slowingSpeed;
-                goRight(previousCar, false, lightPosition, light);
+                go(firstDirection,secondDirection,previousCar, lightPosition, light);
                 going = true;
                 if (this->getRotation() < 89 || this->getRotation() > 91 || this->getRotation() == 0 || this->getRotation() == 180)
                 {
@@ -91,10 +91,10 @@ void Car::turn(Direction firstDirection, Direction secondDirection, sf::Vector2f
             }
             break;
         case Direction::up:
-            if (goUp(previousCar, false, lightPosition, light))
+            if (go(firstDirection,secondDirection,previousCar, lightPosition, light))
             {
                 this->speed /= slowingSpeed;
-                goUp(previousCar, false, lightPosition, light);
+                go(firstDirection,secondDirection,previousCar, lightPosition, light);
                 going = true;
                 if (this->getRotation() > 1 || this->getRotation() < 359 || this->getRotation() == 90 || this->getRotation() == 270)
                 {
@@ -107,10 +107,10 @@ void Car::turn(Direction firstDirection, Direction secondDirection, sf::Vector2f
             }
             break;
         case Direction::down:
-            if (goDown(previousCar, false, lightPosition, light))
+            if (go(firstDirection,secondDirection,previousCar, lightPosition, light))
             {
                 this->speed /= slowingSpeed;
-                goDown(previousCar, false, lightPosition, light);
+                go(firstDirection,secondDirection,previousCar, lightPosition, light);
                 going = true;
                 if (this->getRotation() < 179 || this->getRotation() > 181 || this->getRotation() == 90 || this->getRotation() == 270)
                 {
@@ -233,16 +233,16 @@ void Car::turn(Direction firstDirection, Direction secondDirection, sf::Vector2f
         switch (secondDirection)
         {
         case Direction::left:
-            if (goLeft(false, lightPosition, light))
+            if (go(firstDirection, secondDirection, lightPosition, light))
             {
-
                 this->speed /= slowingSpeed;
-                goLeft(false, lightPosition, light);
+                go(firstDirection, secondDirection, lightPosition, light);
                 going = true;
                 if (this->getRotation() > 271 || this->getRotation() < 269 || this->getRotation() == 0 || this->getRotation() == 180)
                 {
                     float rotateSpeed = std::sqrt(std::abs(1 / (turningPosition.y - this->car.getPosition().y)) * this->speed * 15 + .5f);
-                    if (firstDirection == Direction::down){
+                    if (firstDirection == Direction::down)
+                    {
                         this->car.rotate(rotateSpeed);
                     }
                     else
@@ -251,10 +251,10 @@ void Car::turn(Direction firstDirection, Direction secondDirection, sf::Vector2f
             }
             break;
         case Direction::right:
-            if (goRight(false, lightPosition, light))
+            if (go(firstDirection, secondDirection, lightPosition, light))
             {
                 this->speed /= slowingSpeed;
-                goRight(false, lightPosition, light);
+                go(firstDirection, secondDirection, lightPosition, light);
                 going = true;
                 if (this->getRotation() < 89 || this->getRotation() > 91 || this->getRotation() == 0 || this->getRotation() == 180)
                 {
@@ -267,10 +267,10 @@ void Car::turn(Direction firstDirection, Direction secondDirection, sf::Vector2f
             }
             break;
         case Direction::up:
-            if (goUp(false, lightPosition, light))
+            if (go(firstDirection, secondDirection, lightPosition, light))
             {
                 this->speed /= slowingSpeed;
-                goUp(false, lightPosition, light);
+               go(firstDirection, secondDirection, lightPosition, light);
                 going = true;
                 if (this->getRotation() > 1 || this->getRotation() < 359 || this->getRotation() == 90 || this->getRotation() == 270)
                 {
@@ -283,10 +283,10 @@ void Car::turn(Direction firstDirection, Direction secondDirection, sf::Vector2f
             }
             break;
         case Direction::down:
-            if (goDown(false, lightPosition, light))
+            if (go(firstDirection,secondDirection, lightPosition, light))
             {
                 this->speed /= slowingSpeed;
-                goDown(false, lightPosition, light);
+                go(firstDirection,secondDirection, lightPosition, light);
                 going = true;
                 if (this->getRotation() < 179 || this->getRotation() > 181 || this->getRotation() == 90 || this->getRotation() == 270)
                 {
@@ -337,6 +337,98 @@ void Car::turn(Direction firstDirection, Direction secondDirection, sf::Vector2f
         }
     }
 }
+bool Car::go(Direction firstDirection, Direction secondDirection, Car &previousCar, sf::Vector2f lightPosition, bool light)
+{
+    bool condition = true;
+    if (firstDirection == Direction::up)
+    {
+        if (lightPosition.y + margin >= this->car.getPosition().y && lightPosition.y <= this->car.getPosition().y && light)
+            condition = false;
+    }
+    else if (firstDirection == Direction::down)
+    {
+        if (lightPosition.y - margin <= this->car.getPosition().y && lightPosition.y >= this->car.getPosition().y && light)
+            condition = false;
+    }
+    else if (firstDirection == Direction::left)
+    {
+        if (lightPosition.x + margin >= this->car.getPosition().x && lightPosition.x <= this->car.getPosition().x && light)
+            condition = false;
+    }
+    else if (firstDirection == Direction::right)
+    {
+        if (lightPosition.x - margin <= this->car.getPosition().x && lightPosition.x >= this->car.getPosition().x && light)
+            condition = false;
+    }
+    if (condition)
+    {
+        if (secondDirection == Direction::up)
+        {
+            goUp(previousCar, false);
+        }
+        else if (secondDirection == Direction::down)
+        {
+            goDown(previousCar, false);
+        }
+        else if (secondDirection == Direction::left)
+        {
+            goLeft(previousCar, false);
+        }
+        else if (secondDirection == Direction::right)
+        {
+            goRight(previousCar, false);
+        }
+        return true;
+    }
+    else
+        return false;
+}
+bool Car::go(Direction firstDirection, Direction secondDirection, sf::Vector2f lightPosition, bool light)
+{
+    bool condition = true;
+    if (firstDirection == Direction::up)
+    {
+        if (lightPosition.y + margin >= this->car.getPosition().y && lightPosition.y <= this->car.getPosition().y && light)
+            condition = false;
+    }
+    else if (firstDirection == Direction::down)
+    {
+        if (lightPosition.y - margin <= this->car.getPosition().y && lightPosition.y >= this->car.getPosition().y && light)
+            condition = false;
+    }
+    else if (firstDirection == Direction::left)
+    {
+        if (lightPosition.x + margin >= this->car.getPosition().x && lightPosition.x <= this->car.getPosition().x && light)
+            condition = false;
+    }
+    else if (firstDirection == Direction::right)
+    {
+        if (lightPosition.x - margin <= this->car.getPosition().x && lightPosition.x >= this->car.getPosition().x && light)
+            condition = false;
+    }
+    if (condition)
+    {
+        if (secondDirection == Direction::up)
+        {
+            goUp(false);
+        }
+        else if (secondDirection == Direction::down)
+        {
+            goDown(false);
+        }
+        else if (secondDirection == Direction::left)
+        {
+            goLeft(false);
+        }
+        else if (secondDirection == Direction::right)
+        {
+            goRight(false);
+        }
+        return true;
+    }
+    else
+        return false;
+}
 void Car::goUp(Car &previousCar)
 {
     this->car.setRotation(0.0f);
@@ -368,7 +460,9 @@ bool Car::goUp(bool changeRotation, sf::Vector2f lightPosition, bool light)
     if (changeRotation)
         this->car.setRotation(0.0f);
     if (lightPosition.y + margin >= this->car.getPosition().y && lightPosition.y <= this->car.getPosition().y && light)
+    {
         return false;
+    }
     else
     {
         this->car.move(0.0f, -speed);
@@ -394,6 +488,15 @@ void Car::goUp(bool changeRotation)
     if (changeRotation)
         this->car.setRotation(0.0f);
     this->car.move(0.0f, -speed);
+}
+void Car::goUp(Car &previousCar, bool changeRotation)
+{
+    if (changeRotation)
+        this->car.setRotation(0.0f);
+    if (previousCar.getPosition().y + previousCar.height + margin >= this->car.getPosition().y)
+        ;
+    else
+        this->car.move(0.0f, -speed);
 }
 void Car::goUp()
 {
@@ -458,6 +561,15 @@ void Car::goDown(bool changeRotation)
         this->car.setRotation(180.0f);
     this->car.move(0.0f, speed);
 }
+void Car::goDown(Car &previousCar, bool changeRotation)
+{
+    if (changeRotation)
+        this->car.setRotation(180.0f);
+    if (previousCar.getPosition().y - previousCar.height - margin <= this->car.getPosition().y)
+        ;
+    else
+        this->car.move(0.0f, speed);
+}
 void Car::goDown()
 {
     this->car.setRotation(180.0f);
@@ -521,6 +633,15 @@ void Car::goLeft(bool changeRotation)
         this->car.setRotation(-90.0f);
     this->car.move(-speed, 0.0f);
 }
+void Car::goLeft(Car &previousCar, bool changeRotation)
+{
+    if (changeRotation)
+        this->car.setRotation(-90.0f);
+    if (previousCar.getPosition().x + previousCar.height + margin >= this->car.getPosition().x)
+        ;
+    else
+        this->car.move(-speed, 0.0f);
+}
 void Car::goLeft()
 {
     this->car.setRotation(-90.0f);
@@ -583,6 +704,15 @@ void Car::goRight(bool changeRotation)
     if (changeRotation)
         this->car.setRotation(90.0f);
     this->car.move(speed, 0.0f);
+}
+void Car::goRight(Car &previousCar, bool changeRotation)
+{
+    if (changeRotation)
+        this->car.setRotation(90.0f);
+    if (previousCar.getPosition().x - previousCar.height - margin <= this->car.getPosition().x)
+        ;
+    else
+        this->car.move(speed, 0.0f);
 }
 void Car::goRight()
 {

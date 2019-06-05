@@ -79,12 +79,15 @@ public:
     }
     void turn(Direction firstDirection, Direction secondDirection, sf::Vector2f turningPosition, Car &previousCar, sf::Vector2f lightPosition, bool light, float laneWidth);
     void turn(Direction firstDirection, Direction secondDirection, sf::Vector2f turningPosition, sf::Vector2f lightPosition, bool light, float laneWidth);
+    bool go(Direction firstDirection, Direction secondDirection, Car &previousCar, sf::Vector2f lightPosition, bool light);
+    bool go(Direction firstDirection, Direction secondDirection, sf::Vector2f lightPosition, bool light);
     void goUp(Car &previousCar);
     void goUp(sf::Vector2f lightPosition, bool light);
     void goUp(Car &previousCar, sf::Vector2f lightPosition, bool light);
     bool goUp(bool changeRotation, sf::Vector2f lightPosition, bool light);
     bool goUp(Car &previousCar, bool changeRotation, sf::Vector2f lightPosition, bool light);
     void goUp(bool changeRotation);
+    void goUp(Car &previousCar, bool changeRotation);
     void goUp();
     void goDown(Car &previousCar);
     void goDown(sf::Vector2f lightPosition, bool light);
@@ -92,6 +95,7 @@ public:
     bool goDown(Car &previousCar, bool changeRotation, sf::Vector2f lightPosition, bool light);
     bool goDown(bool changeRotation, sf::Vector2f lightPosition, bool light);
     void goDown(bool changeRotation);
+    void goDown(Car &previousCar, bool changeRotation);
     void goDown();
     void goLeft(Car &previousCar);
     void goLeft(sf::Vector2f lightPosition, bool light);
@@ -99,6 +103,7 @@ public:
     bool goLeft(Car &previousCar, bool changeRotation, sf::Vector2f lightPosition, bool light);
     bool goLeft(bool changeRotation, sf::Vector2f lightPosition, bool light);
     void goLeft(bool changeRotation);
+    void goLeft(Car &previousCar, bool changeRotation);
     void goLeft();
     void goRight(Car &previousCar);
     void goRight(sf::Vector2f lightPosition, bool light);
@@ -106,6 +111,7 @@ public:
     bool goRight(Car &previousCar, bool changeRotation, sf::Vector2f lightPosition, bool light);
     bool goRight(bool changeRotation, sf::Vector2f lightPosition, bool light);
     void goRight(bool changeRotation);
+    void goRight(Car &previousCar, bool changeRotation);
     void goRight();
     void draw(sf::RenderWindow &window);
     float getRotation() const;

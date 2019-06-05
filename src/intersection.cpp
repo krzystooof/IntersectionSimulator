@@ -1,4 +1,5 @@
 #include "intersection.hpp"
+#include <algorithm>
 void Intersection::draw(sf::RenderWindow &window)
 {
 
@@ -147,8 +148,69 @@ void Intersection::go()
     //     }
     // }
 }
-void Intersection::changeLight()
+int Intersection::getGreenLightGroup() const
 {
+    for (auto i : this->lanes)
+    {
+        if (i->getLight() == false)
+            return i->getGroup();
+    }
+    return -1;
+}
+void Intersection::setGroups(LightChangingType lightChangingType)
+{
+    if (lightChangingType == LightChangingType::smart)
+    {
+        for (auto i : lanes)
+        {
+            if ((i->getRotation() == 0 || i->getRotation() == 180) && (i->getType() == LaneType::asphalt || i->getType() == LaneType::tram))
+            {
+                i->setGroup(0);
+            }
+            else if ((i->getRotation() == 0 || i->getRotation() == 180) && (i->getType() == LaneType::asphaltLeft || i->getType() == LaneType::asphaltRight))
+            {
+                i->setGroup(1);
+            }
+            else if ((i->getRotation() == 90 || i->getRotation() == 270) && (i->getType() == LaneType::asphalt || i->getType() == LaneType::tram))
+            {
+                i->setGroup(2);
+            }
+            else if ((i->getRotation() == 90 || i->getRotation() == 270) && (i->getType() == LaneType::asphaltLeft || i->getType() == LaneType::asphaltRight))
+            {
+                i->setGroup(3);
+            }
+        }
+    }
+}
+void Intersection::changeLight(LightChangingType lightChangingType)
+{
+    int sums[4]{0,0,0,0};
     for (auto i : lanes)
-        i->changeLight();
+    {
+        if (i->getGroup() == 0)
+            sums[0] += i->getCarsNearEnd();
+        else if (i->getGroup() == 1)
+            sums[1] += i->getCarsNearEnd();
+        else if (i->getGroup() == 2)
+            sums[2] += i->getCarsNearEnd();
+        else if (i->getGroup() == 3)
+            sums[3] += i->getCarsNearEnd();
+    }
+    if (this->getGreenLightGroup() == std::distance(sums,std::max_element(sums, sums + 4)))
+    {
+        *std::max_element(sums, sums + 4) = 0;
+    }
+    for (auto i : lanes)
+    {
+        if (i->getGroup() == std::distance(sums, std::max_element(sums, sums + 4)))
+        {
+            i->changeLight(true);
+        }
+    }
+    for(auto i :lanes){
+       if (i->getGroup() == std::distance(sums, std::max_element(sums, sums + 4))== false)
+        {
+            i->changeLight(false);
+        }
+    }
 }
