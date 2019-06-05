@@ -2,8 +2,8 @@
 
 void Car::turn(Direction firstDirection, Direction secondDirection, sf::Vector2f turningPosition, Car &previousCar, sf::Vector2f lightPosition, bool light, float laneWidth)
 {
-    if (this->speed > 1.5f)
-        this->speed = 1.3f;
+    if (this->speed > 1.0f)
+        this->speed = 1.0f;
     bool second = false;
     bool middle = false;
     switch (firstDirection)
@@ -175,8 +175,8 @@ void Car::turn(Direction firstDirection, Direction secondDirection, sf::Vector2f
 }
 void Car::turn(Direction firstDirection, Direction secondDirection, sf::Vector2f turningPosition, sf::Vector2f lightPosition, bool light, float laneWidth)
 {
-    if (this->speed > 1.5f)
-        this->speed = 1.3f;
+    if (this->speed > 1.0f)
+        this->speed = 1.0f;
     bool second = false;
     bool middle = false;
     switch (firstDirection)

@@ -26,9 +26,9 @@ void Lane::addVehicle(CarCategory category)
     if (category == CarCategory::car)
         speedMultiplier = ((rand() % 21) + 100) / 100.0;
     else if (category == CarCategory::longCar)
-        speedMultiplier = ((rand() % 21) + 79) / 100.0;
+        speedMultiplier = ((rand() % 21) + 85) / 100.0;
     else if (category == CarCategory::tram)
-        speedMultiplier = ((rand() % 21) + 60) / 100.0;
+        speedMultiplier = ((rand() % 21) + 78) / 100.0;
     else if (category == CarCategory::pedestrian)
         speedMultiplier = ((rand() % 21) + 20) / 100.0;
 
@@ -100,11 +100,30 @@ void Lane::draw(sf::RenderWindow &window)
     window.draw(this->lane);
     if (!cars.empty())
     {
+        float distance = 300;
         int carsNear = 0;
         for (auto it = cars.begin(); it != cars.end();)
         {
-            if (std::abs((*it)->getPosition().x) < std::abs(this->getPosition().x) + 100)
-                carsNear++;
+            if (this->getRotation() == 0)
+            {
+                if (this->getPosition().y + distance > (*it)->getPosition().y && this->getPosition().y < (*it)->getPosition().y)
+                    carsNear++;
+            }
+            else if (this->getRotation() == 180)
+            {
+                if (this->getPosition().y - distance < (*it)->getPosition().y && this->getPosition().y > (*it)->getPosition().y)
+                    carsNear++;
+            }
+            else if (this->getRotation() == 270)
+            {
+                if (this->getPosition().x + distance > (*it)->getPosition().x && this->getPosition().x < (*it)->getPosition().x)
+                    carsNear++;
+            }
+            else if (this->getRotation() == 90)
+            {
+                if (this->getPosition().x - distance < (*it)->getPosition().x && this->getPosition().x > (*it)->getPosition().x)
+                    carsNear++;
+            }
             if (std::abs((*it)->getPosition().x) > 600 || std::abs((*it)->getPosition().y) > 600)
             {
                 delete *it;
@@ -135,9 +154,9 @@ LaneType Lane::getType() const
 void Lane::changeLight(bool green)
 {
     if (green)
-        light = false;
-    else
         light = true;
+    else
+        light = false;
 }
 bool Lane::getLight() const
 {

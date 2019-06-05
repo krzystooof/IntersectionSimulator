@@ -272,5 +272,6 @@ public:
     void go();
     int getGreenLightGroup() const;
     void setGroups(LightChangingType lightChangingType);
-    void changeLight(LightChangingType lightChangingType);
+    int changeLightToRed(LightChangingType lightChangingType);
+    void changeLightToGreen(int group);
 };

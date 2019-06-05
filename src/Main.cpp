@@ -10,7 +10,7 @@
 #include "Main.hpp"
 
 const std::string ACTIVITY_TITLE = "Intersection Simulator";
-int timesBuild = 0;
+int timesBuild = 0, group=-1;
 
 int main()
 {
@@ -28,7 +28,7 @@ int main()
 	std::vector<std::vector<LaneType>> lanes{{LaneType::asphalt}, {LaneType::asphalt}, {LaneType::asphalt}, {LaneType::asphalt}};
 	Intersection *intersection = new Intersection(lanes);
 	std::vector<sf::Time> time{clock.getElapsedTime(), clock.getElapsedTime(), clock.getElapsedTime(), clock.getElapsedTime()};
-	sf::Time lastChangeTime = clock.getElapsedTime();
+	sf::Time lastChangeTime = sf::seconds(0);
 
 	while (menuWindow.isOpen())
 	{
@@ -129,9 +129,10 @@ int main()
 
 		if (elapsedTime.asSeconds() > 5)
 		{
-			intersection->changeLight(LightChangingType::smart);
+			group = intersection->changeLightToRed(LightChangingType::smart);
 			lastChangeTime=clock.getElapsedTime();
 		}
+		if(clock.getElapsedTime()-lastChangeTime>sf::seconds(2.3f)) intersection->changeLightToGreen(group);
 		simulationWindow.setView(simulation);
 		intersection->draw(simulationWindow);
 		simulationWindow.display();

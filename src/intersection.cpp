@@ -45,8 +45,11 @@ void Intersection::addVehicles(int amount, Direction direction)
     {
         if (i->getRotation() == angle && (i->getType() == LaneType::asphalt || i->getType() == LaneType::asphaltRight || i->getType() == LaneType::asphaltLeft))
             i->addVehicle(CarCategory::car, amount);
-        else if (i->getRotation() == angle && i->getType() == LaneType::tram)
-            i->addVehicle(CarCategory::tram, amount);
+        else if (i->getRotation() == angle && i->getType() == LaneType::tram){
+            int random = rand()%3-1;
+            if(random<0)random = 0;
+            i->addVehicle(CarCategory::tram, random);
+        }
     }
 }
 void Intersection::go()
@@ -125,28 +128,6 @@ void Intersection::go()
             }
         }
     }
-    // for (auto i : this->lanes2)
-    // {
-    //     if (i->getType() == LaneType::pedestrian)
-    //     {
-    //         if (i->getRotation() == 0)
-    //         {
-    //             i->go(Direction::up);
-    //         }
-    //         if (i->getRotation() == 180)
-    //         {
-    //             i->go(Direction::down);
-    //         }
-    //         if (i->getRotation() == 90)
-    //         {
-    //             i->go(Direction::right);
-    //         }
-    //         if (i->getRotation() == 270)
-    //         {
-    //             i->go(Direction::left);
-    //         }
-    //     }
-    // }
 }
 int Intersection::getGreenLightGroup() const
 {
@@ -182,33 +163,36 @@ void Intersection::setGroups(LightChangingType lightChangingType)
         }
     }
 }
-void Intersection::changeLight(LightChangingType lightChangingType)
+int Intersection::changeLightToRed(LightChangingType lightChangingType)
 {
-    int sums[4]{0,0,0,0};
+    float sums[4]{0, 0, 0, 0};
+    int times[4]{0, 0, 0, 0};
     for (auto i : lanes)
     {
-        if (i->getGroup() == 0)
-            sums[0] += i->getCarsNearEnd();
-        else if (i->getGroup() == 1)
-            sums[1] += i->getCarsNearEnd();
-        else if (i->getGroup() == 2)
-            sums[2] += i->getCarsNearEnd();
-        else if (i->getGroup() == 3)
-            sums[3] += i->getCarsNearEnd();
+        sums[i->getGroup()] += i->getCarsNearEnd();
+        if(i->getType()!=LaneType::tram) times[i->getGroup()]++;
     }
-    if (this->getGreenLightGroup() == std::distance(sums,std::max_element(sums, sums + 4)))
+    for (int i = 0; i < 4; i++)
     {
-        *std::max_element(sums, sums + 4) = 0;
+        if (times[i] != 0)
+            sums[i] /= times[i];
     }
+    std::cout << "!!!" << sums[0] << " " << sums[1] << " " << sums[2] << " " << sums[3] << "\n";
     for (auto i : lanes)
     {
-        if (i->getGroup() == std::distance(sums, std::max_element(sums, sums + 4)))
+        if (i->getGroup() != std::distance(sums, std::max_element(sums, sums + 4)))
         {
             i->changeLight(true);
         }
     }
-    for(auto i :lanes){
-       if (i->getGroup() == std::distance(sums, std::max_element(sums, sums + 4))== false)
+    return std::distance(sums, std::max_element(sums, sums + 4));
+}
+
+void Intersection::changeLightToGreen(int group)
+{
+    for (auto i : lanes)
+    {
+        if (i->getGroup() == group)
         {
             i->changeLight(false);
         }

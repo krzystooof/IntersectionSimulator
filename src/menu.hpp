@@ -101,17 +101,17 @@ public:
             build = true;
             break;
         case 9:
-            times.push_back((answerNumber + 1) * 2);
+            times.push_back((answerNumber + 1) * 2+2);
             break;
         case 10:
-            times.push_back((answerNumber + 1) * 2);
+            times.push_back((answerNumber + 1) * 2+2);
             break;
         case 11:
-            times.push_back((answerNumber + 1) * 2);
+            times.push_back((answerNumber + 1) * 2+2);
             break;
         case 12:
         {
-            times.push_back((answerNumber + 1) * 2);
+            times.push_back((answerNumber + 1) * 2+2);
             break;
         }
         case 13:
@@ -175,7 +175,7 @@ public:
             break;
         case 7:
             questions = "How much straight lanes?";
-            answers = std::vector<std::string>{"0", "1", "2"};
+            answers = std::vector<std::string>{"0", "1", "2", "3", "4"};
             break;
         case 8:
             questions = "Right turn lane?";
@@ -184,20 +184,20 @@ public:
         case 9:
             titles = "Intersection Building: times";
             questions = "Left - new car spawn after:";
-            answers = std::vector<std::string>{"2 sec", "4 sec", "6 sec", "8 sec", "10 sec"};
+            answers = std::vector<std::string>{"4 sec", "6 sec", "8 sec", "10 sec","12 sec"};
             tips = "It affects all lanes on this side of the intersection";
             break;
         case 10:
             questions = "Right - new car spawn after:";
-            answers = std::vector<std::string>{"2 sec", "4 sec", "6 sec", "8 sec", "10 sec"};
+            answers = std::vector<std::string>{"4 sec", "6 sec", "8 sec", "10 sec","12 sec"};
             break;
         case 11:
             questions = "Up - new car spawn after:";
-            answers = std::vector<std::string>{"2 sec", "4 sec", "6 sec", "8 sec", "10 sec"};
+            answers = std::vector<std::string>{"4 sec", "6 sec", "8 sec", "10 sec","12 sec"};
             break;
         case 12:
             questions = "Down - new car spawn after:";
-            answers = std::vector<std::string>{"2 sec", "4 sec", "6 sec", "8 sec", "10 sec"};
+            answers = std::vector<std::string>{"4 sec", "6 sec", "8 sec", "10 sec","12 sec"};
             break;
         case 13:
             titles = "Intersection Building: traffic lights";
