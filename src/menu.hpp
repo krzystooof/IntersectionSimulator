@@ -4,6 +4,8 @@
 class Menu
 {
 private:
+    sf::RectangleShape background;
+    sf::Texture backgroundTexture;
     sf::Text question, answer, title, tip;
     int questionNumber = 0, maxQuestionsNumber = 13, answerNumber = 0;
     std::string questions, titles, tips;
@@ -17,31 +19,46 @@ private:
 public:
     Menu()
     {
-        font.loadFromFile("content/BebasNeue-Regular.ttf");
+        font.loadFromFile("content/Pixeled.ttf");
         question.setFont(font);
         question.setCharacterSize(24);
         question.setColor(sf::Color::White);
+        sf::FloatRect questionRect = question.getLocalBounds();
+        question.setOrigin(questionRect.left + questionRect.width / 2.0f,questionRect.top + questionRect.height / 2.0f);
         question.setPosition(0.0f, -25.0f);
 
         answer.setFont(font);
         answer.setCharacterSize(24);
         answer.setColor(sf::Color::White);
+        sf::FloatRect answerRect = answer.getLocalBounds();
+        answer.setOrigin(answerRect.left + answerRect.width / 2.0f,answerRect.top + answerRect.height / 2.0f);
         answer.setPosition(0.0f, 25.0f);
 
         title.setFont(font);
         title.setCharacterSize(18);
         title.setColor(sf::Color::White);
+        sf::FloatRect titleRect = title.getLocalBounds();
+        title.setOrigin(titleRect.left + titleRect.width / 2.0f,titleRect.top + titleRect.height / 2.0f);
         title.setPosition(0.0f, -100.0f);
 
         tip.setFont(font);
         tip.setCharacterSize(14);
         tip.setColor(sf::Color::White);
+        sf::FloatRect tipRect = tip.getLocalBounds();
+        tip.setOrigin(tipRect.left + tipRect.width / 2.0f,tipRect.top + tipRect.height / 2.0f);
         tip.setPosition(0.0f, 50.0f);
+
+        this->backgroundTexture.loadFromFile("content/backgroundMenu.png");
+        this->backgroundTexture.setSmooth(true);
+        this->background = sf::RectangleShape(sf::Vector2f(00, 800));
+        this->background.setPosition(sf::Vector2f(-100, -400));
+        this->background.setTexture(&this->backgroundTexture);
 
         nextQuestion();
     }
     void draw(sf::RenderWindow &window)
     {
+        window.draw(background);
         window.draw(question);
         window.draw(answer);
         window.draw(tip);
@@ -101,17 +118,17 @@ public:
             build = true;
             break;
         case 9:
-            times.push_back((answerNumber + 1) * 2+2);
+            times.push_back((answerNumber + 1) * 2 + 2);
             break;
         case 10:
-            times.push_back((answerNumber + 1) * 2+2);
+            times.push_back((answerNumber + 1) * 2 + 2);
             break;
         case 11:
-            times.push_back((answerNumber + 1) * 2+2);
+            times.push_back((answerNumber + 1) * 2 + 2);
             break;
         case 12:
         {
-            times.push_back((answerNumber + 1) * 2+2);
+            times.push_back((answerNumber + 1) * 2 + 2);
             break;
         }
         case 13:
@@ -184,20 +201,20 @@ public:
         case 9:
             titles = "Intersection Building: times";
             questions = "Left - new car spawn after:";
-            answers = std::vector<std::string>{"4 sec", "6 sec", "8 sec", "10 sec","12 sec"};
+            answers = std::vector<std::string>{"4 sec", "6 sec", "8 sec", "10 sec", "12 sec"};
             tips = "It affects all lanes on this side of the intersection";
             break;
         case 10:
             questions = "Right - new car spawn after:";
-            answers = std::vector<std::string>{"4 sec", "6 sec", "8 sec", "10 sec","12 sec"};
+            answers = std::vector<std::string>{"4 sec", "6 sec", "8 sec", "10 sec", "12 sec"};
             break;
         case 11:
             questions = "Up - new car spawn after:";
-            answers = std::vector<std::string>{"4 sec", "6 sec", "8 sec", "10 sec","12 sec"};
+            answers = std::vector<std::string>{"4 sec", "6 sec", "8 sec", "10 sec", "12 sec"};
             break;
         case 12:
             questions = "Down - new car spawn after:";
-            answers = std::vector<std::string>{"4 sec", "6 sec", "8 sec", "10 sec","12 sec"};
+            answers = std::vector<std::string>{"4 sec", "6 sec", "8 sec", "10 sec", "12 sec"};
             break;
         case 13:
             titles = "Intersection Building: traffic lights";
