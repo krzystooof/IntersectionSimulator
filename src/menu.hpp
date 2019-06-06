@@ -1,5 +1,6 @@
 #pragma once
 #include "intersection.hpp"
+#include <string>
 
 class Menu
 {
@@ -19,39 +20,31 @@ private:
 public:
     Menu()
     {
-        font.loadFromFile("content/Pixeled.ttf");
+        font.loadFromFile("content/Perfect DOS VGA 437.ttf");
         question.setFont(font);
-        question.setCharacterSize(24);
+        question.setCharacterSize(40);
         question.setColor(sf::Color::White);
-        sf::FloatRect questionRect = question.getLocalBounds();
-        question.setOrigin(questionRect.left + questionRect.width / 2.0f,questionRect.top + questionRect.height / 2.0f);
-        question.setPosition(0.0f, -25.0f);
+        question.setPosition(-350.0f, -45.0f);
 
         answer.setFont(font);
-        answer.setCharacterSize(24);
+        answer.setCharacterSize(34);
         answer.setColor(sf::Color::White);
-        sf::FloatRect answerRect = answer.getLocalBounds();
-        answer.setOrigin(answerRect.left + answerRect.width / 2.0f,answerRect.top + answerRect.height / 2.0f);
-        answer.setPosition(0.0f, 25.0f);
+        answer.setPosition(-350.0f, 0.0f);
 
         title.setFont(font);
-        title.setCharacterSize(18);
+        title.setCharacterSize(24);
         title.setColor(sf::Color::White);
-        sf::FloatRect titleRect = title.getLocalBounds();
-        title.setOrigin(titleRect.left + titleRect.width / 2.0f,titleRect.top + titleRect.height / 2.0f);
-        title.setPosition(0.0f, -100.0f);
+        title.setPosition(-350.0f, -100.0f);
 
         tip.setFont(font);
-        tip.setCharacterSize(14);
+        tip.setCharacterSize(18);
         tip.setColor(sf::Color::White);
-        sf::FloatRect tipRect = tip.getLocalBounds();
-        tip.setOrigin(tipRect.left + tipRect.width / 2.0f,tipRect.top + tipRect.height / 2.0f);
-        tip.setPosition(0.0f, 50.0f);
+        tip.setPosition(-350.0f, 50.0f);
 
         this->backgroundTexture.loadFromFile("content/backgroundMenu.png");
         this->backgroundTexture.setSmooth(true);
-        this->background = sf::RectangleShape(sf::Vector2f(00, 800));
-        this->background.setPosition(sf::Vector2f(-100, -400));
+        this->background = sf::RectangleShape(sf::Vector2f(800, 200));
+        this->background.setPosition(sf::Vector2f(-400, -100));
         this->background.setTexture(&this->backgroundTexture);
 
         nextQuestion();
@@ -81,7 +74,7 @@ public:
             }
             break;
         case 3:
-            for (int i = 0; i < answerNumber; i++)
+            for (int i = 0; i < answerNumber+1; i++)
             {
                 leftRight.push_back(LaneType::asphalt);
             }
@@ -105,7 +98,7 @@ public:
             }
             break;
         case 7:
-            for (int i = 0; i < answerNumber; i++)
+            for (int i = 0; i < answerNumber+1; i++)
             {
                 upDown.push_back(LaneType::asphalt);
             }
@@ -174,7 +167,7 @@ public:
             break;
         case 3:
             questions = "How much straight lanes?";
-            answers = std::vector<std::string>{"0", "1", "2", "3", "4"};
+            answers = std::vector<std::string>{"1", "2", "3", "4"};
             break;
         case 4:
             questions = "Right turn lane?";
@@ -192,7 +185,7 @@ public:
             break;
         case 7:
             questions = "How much straight lanes?";
-            answers = std::vector<std::string>{"0", "1", "2", "3", "4"};
+            answers = std::vector<std::string>{"1", "2", "3", "4"};
             break;
         case 8:
             questions = "Right turn lane?";

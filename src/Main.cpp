@@ -21,6 +21,7 @@ int main()
 	simulationWindow.setVisible(false);
 	sf::View simulation(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(800.0f, 800.0f));
 	sf::RenderWindow menuWindow(sf::VideoMode(800.0f, 200.0f), ACTIVITY_TITLE + " menu", sf::Style::Close);
+	menuWindow.setVisible(false);
 	sf::View bottomPanel(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(800.0f, 200.0f));
 	menuWindow.setFramerateLimit(60);
 	simulationWindow.setFramerateLimit(60);
@@ -29,6 +30,7 @@ int main()
 	Intersection *intersection = new Intersection(lanes);
 	std::vector<sf::Time> time{clock.getElapsedTime(), clock.getElapsedTime(), clock.getElapsedTime(), clock.getElapsedTime()};
 	sf::Time lastChangeTime = sf::seconds(0);
+	menuWindow.setVisible(true);
 
 	while (menuWindow.isOpen())
 	{
@@ -65,7 +67,6 @@ int main()
 		if (menu.getClose())
 		{
 			menuWindow.close();
-			simulationWindow.setVisible(true);
 		}
 		menuWindow.setView(bottomPanel);
 		menu.draw(menuWindow);
@@ -83,6 +84,7 @@ int main()
 		}
 		if (menu.getGo())
 		{
+			simulationWindow.setVisible(true);
 			std::vector<int> times = menu.getTimes();
 			sf::Time elapsedTime = clock.getElapsedTime() - time[0];
 			if (elapsedTime.asSeconds() >= times[0])

@@ -2,7 +2,10 @@
 #include "lanes.hpp"
 #include <algorithm>
 
-enum class LightChangingType{smart};
+enum class LightChangingType
+{
+    smart
+};
 
 class Intersection
 {
@@ -10,7 +13,7 @@ private:
     sf::RectangleShape center, backgorund;
     sf::Texture centerTexture, backgroundTexture;
     float centerWidth, centerHeight;
-    std::vector<Lane *> lanes,lanes2;
+    std::vector<Lane *> lanes, lanes2;
     float laneWidth = 0;
     int leftLanes, upLanes;
 
@@ -66,9 +69,11 @@ public:
         this->laneWidth = this->centerWidth / (lanes[2].size() + lanes[3].size()) * .863f;
 
         this->leftLanes = lanes[0].size();
-        if(lanes[0][0]==LaneType::tram)leftLanes++;
+        if (lanes[0][0] == LaneType::tram)
+            leftLanes++;
         this->upLanes = lanes[2].size();
-        if(lanes[2][0]==LaneType::tram)upLanes++;
+        if (lanes[2][0] == LaneType::tram)
+            upLanes++;
 
         for (int i = 0; i < lanes.size(); i++)
         {
@@ -268,10 +273,11 @@ public:
 
     void draw(sf::RenderWindow &window);
     void addVehicles(int amount);
-    void addVehicles(int amount,Direction direction);
+    void addVehicles(int amount, Direction direction);
     void go();
     int getGreenLightGroup() const;
     void setGroups(LightChangingType lightChangingType);
     int changeLightToRed(LightChangingType lightChangingType);
     void changeLightToGreen(int group);
+    int getCarsPassed() const;
 };

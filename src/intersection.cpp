@@ -1,8 +1,8 @@
 #include "intersection.hpp"
 #include <algorithm>
+
 void Intersection::draw(sf::RenderWindow &window)
 {
-
     for (auto i : lanes)
     {
         if (i->getType() == LaneType::asphalt || i->getType() == LaneType::asphaltLeft || i->getType() == LaneType::asphaltRight || i->getType() == LaneType::tram)
@@ -45,9 +45,11 @@ void Intersection::addVehicles(int amount, Direction direction)
     {
         if (i->getRotation() == angle && (i->getType() == LaneType::asphalt || i->getType() == LaneType::asphaltRight || i->getType() == LaneType::asphaltLeft))
             i->addVehicle(CarCategory::car, amount);
-        else if (i->getRotation() == angle && i->getType() == LaneType::tram){
-            int random = rand()%3-1;
-            if(random<0)random = 0;
+        else if (i->getRotation() == angle && i->getType() == LaneType::tram)
+        {
+            int random = rand() % 3 - 1;
+            if (random < 0)
+                random = 0;
             i->addVehicle(CarCategory::tram, random);
         }
     }
@@ -144,19 +146,19 @@ void Intersection::setGroups(LightChangingType lightChangingType)
     {
         for (auto i : lanes)
         {
-            if ((i->getRotation() == 0 || i->getRotation() == 180) && (i->getType() == LaneType::asphalt || i->getType() == LaneType::tram))
+            if ((i->getRotation() == 0 || i->getRotation() == 180) && (i->getType() == LaneType::asphalt || i->getType() == LaneType::tram || i->getType() == LaneType::asphaltRight))
             {
                 i->setGroup(0);
             }
-            else if ((i->getRotation() == 0 || i->getRotation() == 180) && (i->getType() == LaneType::asphaltLeft || i->getType() == LaneType::asphaltRight))
+            else if ((i->getRotation() == 0 || i->getRotation() == 180) && (i->getType() == LaneType::asphaltLeft))
             {
                 i->setGroup(1);
             }
-            else if ((i->getRotation() == 90 || i->getRotation() == 270) && (i->getType() == LaneType::asphalt || i->getType() == LaneType::tram))
+            else if ((i->getRotation() == 90 || i->getRotation() == 270) && (i->getType() == LaneType::asphalt || i->getType() == LaneType::tram|| i->getType() == LaneType::asphaltRight))
             {
                 i->setGroup(2);
             }
-            else if ((i->getRotation() == 90 || i->getRotation() == 270) && (i->getType() == LaneType::asphaltLeft || i->getType() == LaneType::asphaltRight))
+            else if ((i->getRotation() == 90 || i->getRotation() == 270) && (i->getType() == LaneType::asphaltLeft ))
             {
                 i->setGroup(3);
             }
@@ -170,11 +172,12 @@ int Intersection::changeLightToRed(LightChangingType lightChangingType)
     for (auto i : lanes)
     {
         sums[i->getGroup()] += i->getCarsNearEnd();
-        if(i->getType()!=LaneType::tram) times[i->getGroup()]++;
+        if (i->getType() != LaneType::tram)
+            times[i->getGroup()]++;
     }
     for (int i = 0; i < 4; i++)
     {
-        if (times[i] != 0)
+        if (times[i] != 0 && times[i] > 1)
             sums[i] /= times[i];
     }
     std::cout << "!!!" << sums[0] << " " << sums[1] << " " << sums[2] << " " << sums[3] << "\n";
