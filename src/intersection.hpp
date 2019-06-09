@@ -279,5 +279,7 @@ public:
     void setGroups(LightChangingType lightChangingType);
     int changeLightToRed(LightChangingType lightChangingType);
     void changeLightToGreen(int group);
-    int getCarsPassed() const;
+    int getCarsNear() const;
+    int getLeftLanes() const;
+    int getUpLanes() const;
 };

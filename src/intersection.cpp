@@ -180,7 +180,7 @@ int Intersection::changeLightToRed(LightChangingType lightChangingType)
         if (times[i] != 0 && times[i] > 1)
             sums[i] /= times[i];
     }
-    std::cout << "!!!" << sums[0] << " " << sums[1] << " " << sums[2] << " " << sums[3] << "\n";
+    //std::cout << "!!!" << sums[0] << " " << sums[1] << " " << sums[2] << " " << sums[3] << "\n";
     for (auto i : lanes)
     {
         if (i->getGroup() != std::distance(sums, std::max_element(sums, sums + 4)))
@@ -200,4 +200,16 @@ void Intersection::changeLightToGreen(int group)
             i->changeLight(false);
         }
     }
+}
+int Intersection::getCarsNear() const{
+    int sum=0;
+    for(auto i:lanes){
+        sum+=i->getCarsNearEnd();
+    }
+}
+int Intersection::getLeftLanes() const{
+    return this->leftLanes;
+}
+int Intersection::getUpLanes() const{
+    return this->upLanes;
 }
