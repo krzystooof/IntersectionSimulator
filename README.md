@@ -5,7 +5,7 @@ I had a lot of features ideas for this project, but only some of them was realiz
 ## About
 The source code is in **src** folder, graphics in **content** the rest of files is configuration for VScode and SFML from [andrew r king](https://github.com/andrew-r-king/sfml-vscode-boilerplate).
 ### Application features:
-- **simple 2D graphical simulation of intersection, vehicles etc.**\
+- **simple 2D top-view graphical simulation of intersection, vehicles etc.**\
 	cars turning (left and right) is not perfect: turning animation is far from real, when turning left vehicles from opposite directories are colliding
 -	**creating own intersection**\
 menu is very simple and the GUI is unfinished, due to bad features planning the opposite directions must have the same amount and types of lanes\
