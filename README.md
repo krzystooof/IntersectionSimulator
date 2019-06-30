@@ -14,8 +14,8 @@ there is pavement, but pedestrians and zebra crossings are not implemented
 -	intersection has one controlling mode named “smart”\
              it creates group of lanes and decides which is the most crowded, this group gets green light
 ### Class and it’s tasks:
--	vehicles: vehicles moving and appearance, lights reacting and collisions
--	lanes: lanes appearing and appearance, spawning vehicles
--	intersection: merging all element and controlling intersection flow
+-	Vehicles: vehicles moving and appearance, lights reacting and collisions
+-	Lanes: lanes appearing and appearance, spawning vehicles
+-	Intersection: merging all element and controlling intersection flow
 
 <i> Technologies used: C++, SFML library <i>
