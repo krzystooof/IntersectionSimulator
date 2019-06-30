@@ -1,6 +1,8 @@
 # Intersection Simulator
 It is a second semester project for the programming classes at Poznań University of Technology.
-I had a lot of features ideas for this project, but only some of them was realized due to limited amount of time.
+I had a lot of features ideas for this project, but only some of them was realized due to limited amount of time.\
+<img src="GIF/smallIntersection.gif" height="350" width="350">
+<img src="GIF/bigIntersection.gif" height="350" width="350">
 
 ## About
 The source code is in **src** folder, graphics in **content** the rest of files is configuration for VScode and SFML from [andrew r king](https://github.com/andrew-r-king/sfml-vscode-boilerplate).
@@ -20,3 +22,7 @@ there is pavement, but pedestrians and zebra crossings are not implemented
 -	*Intersection:* merging all element and controlling intersection flow
 
 <i> Technologies used: C++, SFML library <i>
+	
+
+
+
