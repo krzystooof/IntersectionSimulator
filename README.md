@@ -17,7 +17,7 @@ there is pavement, but pedestrians and zebra crossings are not implemented
 -	**editing amount vehicles on lanes**\
               there is option to choose a time between cars spawn for every direction
 -	**intersection has one controlling mode named *smart***\
-             it creates group of lanes and decides which is the most crowded, this group gets green light\
+             it creates group of lanes and decides which is the most crowded, this group gets green light
 -	 *menu is very simple and the GUI is unfinished*
 ### Class and it’s tasks:
 -	*Vehicles:* vehicles moving and appearance, lights reacting and collisions
